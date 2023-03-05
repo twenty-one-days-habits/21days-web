@@ -13,7 +13,9 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
-
+#app {
+  width: 100%;
+}
 a {
   font-weight: 500;
   color: #646cff;
@@ -26,9 +28,9 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  box-sizing: border-box;
 }
 
 h1 {
@@ -59,12 +61,6 @@ button:focus-visible {
   padding: 2em;
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
 
 @media (prefers-color-scheme: light) {
   :root {

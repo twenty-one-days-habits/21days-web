@@ -1,4 +1,4 @@
-:root {
+/* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -12,7 +12,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-}
+} */
 #app {
   width: 100%;
 }
@@ -60,8 +60,62 @@ button:focus-visible {
 .card {
   padding: 2em;
 }
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+body {
+    background: #fff;
+    font-family: mipro-regular, MI LANTING, miui, PingFang SC, Helvetica Neue,
+        Helvetica, arial, microsoft yahei;
+    color: #000;
+    font-size: 12px;
+}
+// 深色模式
+body.dark-mode {
+    background: #000;
+}
+a,
+a:visited,
+a:hover {
+    color: #000;
+    text-decoration: none;
+}
+body,
+ul,
+ol,
+p,
+input,
+select,
+dt,
+dd {
+    padding: 0;
+    margin: 0;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: 12px;
+    font-weight: normal;
+    padding: 0;
+    margin: 0;
+}
 
-
+li {
+    list-style: none;
+}
+i,
+em {
+    font-style: normal;
+}
+b {
+    font-weight: normal;
+}
+/* 
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -73,4 +127,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */

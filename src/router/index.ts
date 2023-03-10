@@ -1,8 +1,9 @@
 import { createRouter,createWebHashHistory } from "vue-router";
 import user from './user' 
-console.log(user)
+import team from './team'
 const routes = [
- ...user
+ ...user,
+ ...team
 ]
  
 const router = createRouter({

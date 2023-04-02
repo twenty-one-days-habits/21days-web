@@ -1,0 +1,28 @@
+.btn {
+    height: 48px;
+    line-height: 48px;
+    font-size: 17px;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    background-color: $blue;
+    border-radius: 15px;
+    margin: 20px 0 20px;
+}
+.user-input {
+    display: block;
+    height: 55px;
+    line-height: 55px;
+    font-size: 15px;
+    padding: 0 10px;
+    width: 100%;
+    background-color: #F7F8F9;
+    border: none;
+    border-radius: 3px;
+    margin-top: 20px;
+    box-sizing: border-box;
+    &:focus {
+        border: 1px solid $blue;
+        outline: none;
+    }
+}

@@ -14,7 +14,16 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: '@import "@/scss/variables.scss";'
+        additionalData: '@import "@/scss/variables.scss";@import "@/scss/common.scss";'
+      }
+    }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://23.106.140.233:8088',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
       }
     }
   }

@@ -1,6 +1,6 @@
 <template>
     <div class="team-list">
-        <div class="team-current">
+        <div class="team-current" v-if="false">
             <div class="team-current-top">
                 <div class="team-current-left">
                     <p class="team-current-title">团队名称</p>
@@ -25,6 +25,7 @@
                 </div>
             </div>
         </div>
+        <Empty />
         <div class="team-history">
             <h2 class="team-history-title">
                 历史团队计划
@@ -37,7 +38,24 @@
             </div>
         </div>
     </div>
+    <Join />
 </template>
+<script lang="ts">
+import { defineComponent } from 'vue'
+import Join from './components/Join.vue'
+import Empty from './components/Empty.vue'
+
+export default defineComponent({
+    components: { 
+        Join,
+        Empty
+    },
+    setup() {
+        
+    },
+})
+</script>
+
 <style lang="scss">
 .team-list {
     padding-top: 15px;

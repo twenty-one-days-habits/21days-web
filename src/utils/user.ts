@@ -7,3 +7,11 @@ export function postLogin( data:any ){
         data
     })
 }
+
+export function postRegister (data: any) {
+    return request({
+        url: '/users/register',
+        method: "post",
+        data
+    })
+}

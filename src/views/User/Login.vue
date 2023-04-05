@@ -37,8 +37,8 @@ export default defineComponent({
         }
         const login = async () => {
             const res = await postLogin({
-                username: "test4",
-                password: "password"
+                username: userName.value,
+                password: password.value
             })
             console.log(res);
         }

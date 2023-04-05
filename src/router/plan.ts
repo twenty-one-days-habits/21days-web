@@ -10,6 +10,10 @@ const routes = [{
       name: 'List',
       path: 'list',
       component: ()=>import("../views/Plan/List.vue")
-  }]
+  }, {
+    name: 'Create',
+    path: 'create',
+    component: ()=>import("../views/Plan/Create.vue")
+}]
 }]
 export default routes;

@@ -39,7 +39,7 @@
                         <span class="plan-right">3/<em>5</em></span>
                     </div>
                 </div>
-            </div>
+            </div> 
         </div>
     </div>
 </template>

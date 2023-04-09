@@ -38,22 +38,11 @@
             </div>
         </div>
     </div>
-    <Join />
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue'
-import Join from './components/Join.vue'
+<script lang="ts" setup>
 import Empty from './components/Empty.vue'
-
-export default defineComponent({
-    components: { 
-        Join,
-        Empty
-    },
-    setup() {
-        
-    },
-})
+import { ref } from 'vue';
+const showJoin = ref(false);
 </script>
 
 <style lang="scss">
@@ -153,7 +142,7 @@ export default defineComponent({
 .team-history {
     &-title {
         font-size: 18px;
-        margin: 25px 0;
+        margin: 35px 0 25px;
     }
     &-item {
         border-radius: 15px;;

@@ -1,9 +1,21 @@
+<script setup lang="ts">
+    import { defineEmits } from 'vue';
+    const emit = defineEmits(['close']);
+    const close = () => {
+        console.log('close');
+        console.log(emit);
+        emit('close')
+    }
+    const submit = () => {
+        close()
+    }
+</script>
 <template>
     <div class="mask">
         <div class="join">
             <h5 class="join-title">
                 加入团队计划
-                <span class="join-close">X</span>
+                <span class="join-close" @click="close">X</span>
             </h5>
             <div class="join-text">
                 请输入邀请码：
@@ -12,18 +24,19 @@
             <p class="join-desc">
                 添加完成后可在计划列表中看到，可在计划列表中添加任务。
             </p>
-            <div class="btn">提交</div>
+            <div class="btn" @click="submit">提交</div>
         </div>
     </div>
 </template>
 <style lang="scss">
 .mask {
-    position: absolute;
+    position: fixed;
     top: 0;
+    left: 0;
     bottom: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
     background-color: rgba($color: #000000, $alpha: .5);
+    z-index: 10;
 }
 .join {
     width: 90%;
@@ -31,6 +44,7 @@
     left: 50%;
     transform: translateX(-50%);
     top: 60px;
+    box-sizing: border-box;
     background-color: #fff;
     border-radius: 20px;
     padding: 20px;
@@ -58,6 +72,8 @@
         border: 1px solid #D8E0F0;
         border-radius: 15px;
         margin: 20px 0 30px;
+        padding: 0 15px;
+        box-sizing: border-box;
     }
 }
 </style>

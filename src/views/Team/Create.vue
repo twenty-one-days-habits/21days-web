@@ -1,3 +1,7 @@
+<script lang="ts" setup>
+import { ref } from 'vue'
+const showCalender = ref(false);
+</script>
 <template>
     <div class="team-create">
         <div class="team-create-item">
@@ -14,7 +18,7 @@
             </div>
             <div>
                 <input class="team-create-input" placeholder="请输入开始日期"/>
-                <span class="team-create-calender"></span>
+                <span class="team-create-calender" @click="showCalender=true"></span>
             </div>
         </div>
         <!-- <div class="team-create-item">
@@ -34,6 +38,7 @@
             </div>
         </div>
         <div class="btn">完成设置</div>
+        <van-calendar v-model:show="show" @confirm="onConfirm" />
     </div>
 </template>
 <style lang="scss" scoped>

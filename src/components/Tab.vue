@@ -1,5 +1,24 @@
+<script lang="ts" setup>
+import { useRouter} from 'vue-router'
+import { watch, ref } from 'vue'
+const router = useRouter()
+// 监听当前路由
+const showTab = ref(false)
+watch(
+  () => router.currentRoute.value,
+  (newValue: any) => {
+    const name: string = newValue.name;
+    if (name === 'Login' || name === 'Register') {
+        showTab.value = false
+    } else {
+        showTab.value = true
+    }
+  },
+  { immediate: true }
+)
+</script>
 <template>
-    <div class="tab">
+    <div class="tab" v-if="showTab">
         <div>
             <span class="tab-icon tab-clock"></span>
             <span class="tab-text">打卡任务</span>
@@ -17,13 +36,13 @@
 <style lang="scss">
     .tab {
         position: absolute;
-        height: 85px;
+        height: 66px;
         bottom: 0;
         width: 100%;
         display: flex;
         box-shadow: 3px 3px 10px 2px rgba(#000, 0.1);
         box-sizing: border-box;
-        padding-top: 16px;
+        padding-top: 11px;
         div {
             flex: 1;
             text-align: center;
@@ -33,7 +52,7 @@
         }
         &-text {
             font-size: 11px;
-            padding-top: 10px;
+            padding-top: 8px;
         }
         &-icon {
             width: 28px;

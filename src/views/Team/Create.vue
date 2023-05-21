@@ -17,14 +17,14 @@
                 <span class="team-create-calender"></span>
             </div>
         </div>
-        <div class="team-create-item">
+        <!-- <div class="team-create-item">
             <div class="team-create-label">
                 结束日期
             </div>
             <div>
                 <input class="team-create-input" placeholder="请输入开始日期"/>
             </div>
-        </div>
+        </div> -->
         <div class="team-create-item">
             <div class="team-create-label">
                 描述

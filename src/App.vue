@@ -1,8 +1,10 @@
 <script setup lang="ts">
+  import tab from './components/Tab.vue'
 </script>
 
 <template>
   <router-view></router-view>
+  <tab></tab>
 </template>
 
 <style scoped>

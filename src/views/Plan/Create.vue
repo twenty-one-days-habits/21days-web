@@ -54,7 +54,7 @@
           <template #input>
             <van-radio-group v-model="signTypeOfWeek" direction="horizontal">
               <van-radio name="1">按天</van-radio>
-              <van-radio name="2">按频次</van-radio>
+              <van-radio name="2">按次数</van-radio>
             </van-radio-group>
           </template>
         </van-field>
@@ -84,7 +84,7 @@
           label="填写打卡频次"
           input-align="left"
         >
-          <template #input>共&nbsp;<input class="" type="text" v-model="times"/>&nbsp;/&nbsp;周 </template>
+          <template #input>&nbsp;<input class="" type="text" v-model="times"/>次&nbsp;/&nbsp;周 </template>
         </van-field>
       </van-cell-group>
       <van-cell-group v-if="frequencyType === '0'">
@@ -129,7 +129,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from "vue";
 // import SwitchTab from '../../components/SwitchTab.vue';
-import { SwitchItem } from "../../components/interface";
+// import { SwitchItem } from "../../components/interface";
 
 const daysOfWeek = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
 let frequencyType = ref("1");

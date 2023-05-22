@@ -8,11 +8,11 @@ const routes = [{
         path: 'result',
         component: ()=>import("../views/Team/Result.vue")
     }, {
-        name: 'List',
+        name: 'TeamList',
         path: 'list',
         component: ()=>import("../views/Team/List.vue")
     }, {
-        name: 'Create',
+        name: 'TeamCreate',
         path: 'create',
         component: ()=>import("../views/Team/Create.vue")
     }, {

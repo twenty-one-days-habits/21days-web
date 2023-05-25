@@ -48,27 +48,11 @@ interface planItem {
 }
 
 export default {
-  // data() {
-  //   return {
-  //     todayPlans: reactive([]),
-  //     otherPlans: reactive([]),
-  //     curTeamId: ''
-  //   }
-  // },
   async mounted() {
     const res1 = await getMyTeams();
     console.info(res1);
     this.curTeamId = res1.data.current_team?.[0]?.id;
-    this.getTasks(this.curTeamId)
-  },
-  methods: {
-    handleClick(e: HTMLElement, index: number) {
-      console.info(this.todayPlans.value);
-      const item = this.todayPlans[index];
-      console.info(typeof item);
-      item.checkin = !item.checkin
-    },
-    async getTasks (teamId:string, date?: number) {
+    const getTasks = async (teamId:string, date?: number) => {
       const userId = localStorage.userId;
       const res = await getTasksByDate(teamId, userId, date);
       console.info(res);
@@ -77,15 +61,36 @@ export default {
         console.info(this.todayPlans)
       }
     }
+    
+
+    await getTasks(this.curTeamId)
   },
   setup() {
     let todayPlans = reactive([]);
     let otherPlans = ref([]);
     let curTeamId = ref('');
+    const plans = reactive({
+      todayPlans: [],
+      otherPlans: []
+    })
+    
+    
+
+    const handleClick = (e: HTMLElement, index: number)  =>{
+      const list = JSON.parse(JSON.stringify(todayPlans))
+      const item = list[index];
+      item.checkin = !item.checkin
+    };
+    
+    
+   
     return {
+      handleClick,
+      // getTasks,
       todayPlans,
       otherPlans,
-      curTeamId
+      curTeamId,
+      plans
     }
   }
 }

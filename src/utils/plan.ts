@@ -53,3 +53,13 @@ export function createTask(data) {
     data
   })
 }
+
+export function getTasksByDate(teamId:string, userId:string, date?: number) {
+  return request({
+    url: `/tasks/${teamId}/${userId}`,
+    method: "get",
+    data: {
+      date
+    }
+  })
+}

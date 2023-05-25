@@ -25,13 +25,13 @@
         </van-field>
       </van-cell-group>
       <van-cell-group v-if="checkInType === '1'">
-        <van-field name="frequency" label="每天">
+        <van-field name="everyday" label="每天">
           <template #input>
-            <van-switch v-model="frequency" />
+            <van-switch v-model="everyday" />
           </template>
         </van-field>
       </van-cell-group>
-      <van-cell-group v-if="checkInType === '1' && !frequency">
+      <van-cell-group v-if="checkInType === '1' && !everyday">
         <van-field label-align="top" label="选择需要打卡的天数">
           <template #input>
             <div class="days">
@@ -70,10 +70,10 @@
             <div class="days">
               <span
                 class="day"
-                :class="{selected: selected.includes(item)}"
+                :class="{selected: selected.includes(index)}"
                 v-for="(item, index) in daysOfWeek"
                 :key="index"
-                @click="selectDay(item)"
+                @click="selectDay(index)"
               >
                 {{ item }}
               </span>
@@ -87,6 +87,7 @@
           name="counts"
           v-model="counts"
           type="digit"
+          placeholder="请输入打卡频次"
         >
           <template #input>&nbsp;<input class="" type="digit" v-model="counts"/>次&nbsp;/&nbsp;周 </template>
         </van-field>
@@ -98,6 +99,7 @@
           name="counts"
           v-model="counts"
           type="digit"
+          placeholder="请输入打卡频次"
         >
           <!-- <template #input>共&nbsp;<input class="" type="digit" v-model="counts"/>&nbsp;&nbsp;次 </template> -->
         </van-field>
@@ -139,6 +141,7 @@
 import { reactive, ref } from "vue";
 import { createTask } from "../../utils/plan";
 import { useRoute } from "vue-router";
+import { showToast } from 'vant';
 // import SwitchTab from '../../components/SwitchTab.vue';
 // import { SwitchItem } from "../../components/interface";
 const route = useRoute()
@@ -147,7 +150,7 @@ let teamId = route.params.teamId
 const daysOfWeek = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
 let checkInType = ref("1");
 let title = ref("");
-let frequency = ref(false);
+let everyday = ref(false);
 let score = ref("");
 let description = ref("");
 let signTypeOfWeek = ref("0");
@@ -156,6 +159,7 @@ let counts = ref('');
 let days = ref('');
 
 const selectDay = (item: number) => {
+  console.info(item);
   if(selected.includes(item)) {
     const index = selected.indexOf(item);
     selected.splice(index, 1);
@@ -163,6 +167,7 @@ const selectDay = (item: number) => {
     selected.push(item)
   }
   days.value = selected.sort((a,b) => a - b).join('|')
+  console.info(days)
 }
 
 const onSubmit = async (values: any) => {
@@ -175,16 +180,18 @@ const onSubmit = async (values: any) => {
   // 打卡频次 1
   if(values.checkInType === '1') {
     // 每天
-    if(values.frequency) {
+    if(values.everyday) {
       data = {
         ...data,
-        frequency: values.frequency ? 1 : 0,
+        check_in_type: +values.checkInType,
+        everyday: values.everyday ? 1 : 0,
+        days: '',
         score: +values.score
       }
     } else {
       data = {
         ...data,
-        days: values.days,
+        days: days.value,
         score: +values.score
       }
     }
@@ -200,6 +207,16 @@ const onSubmit = async (values: any) => {
       counts: +values.counts,
       score: +values.score
     }
+  } else if(values.checkInType === '2') {
+    data = {
+      // ...values,
+      ...data,
+      everyday: 0,
+      days: days.value,
+      check_in_type: +values.checkInType,
+      counts: "",
+      score: +values.score
+    }
   }
   // const data = {
   //   ...values,
@@ -211,7 +228,11 @@ const onSubmit = async (values: any) => {
   //   score: +values.score
   // }
   delete data.checkInType
-  const res = await createTask(data)
+  const res = await createTask(data);
+  showToast(res.code === 200 ? '创建成功' : '创建失败');
+  if(res.code === 200) {
+    location.replace('#/plan/list')
+  }
 };
 </script>
 <style lang="scss" scoped>

@@ -35,7 +35,7 @@ watch(
 </template>
 <style lang="scss">
     .tab {
-        position: absolute;
+        position: fixed;
         height: 66px;
         bottom: 0;
         width: 100%;
@@ -43,6 +43,8 @@ watch(
         box-shadow: 3px 3px 10px 2px rgba(#000, 0.1);
         box-sizing: border-box;
         padding-top: 11px;
+        z-index: 10;
+        background-color: #fff;
         div {
             flex: 1;
             text-align: center;

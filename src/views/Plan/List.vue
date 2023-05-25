@@ -15,10 +15,11 @@
         <p>开始时间：{{ curTeam.start }} 结束时间：{{ curTeam.end }}</p>
       </div>
     </div>
+    <button class="button" @click="createPlan">+</button>
     <ul v-if="planList.length">
-      <li v-for="plan in planList" :key="plan.id">
+      <li v-for="(plan, index) in planList" :key="plan.id" :style="{backgroundColor: colors[index % colors.length]}">
         <h3>{{ plan.title }}</h3>
-        <p>{{ plan.desc }}</p>
+        <p>{{ plan.description }}</p>
       </li>
     </ul>
     <div class="empty" v-else>
@@ -34,6 +35,8 @@ import Chart from "../../components/Chart.vue";
 import { getAllPlans, getMyTeams } from "../../utils/plan";
 import { defineComponent } from "vue";
 import { useRouter } from 'vue-router'
+
+const colors = ['#FFAA00', '#5776F2', '#3DB6FC', '#753ECF'];
 
 interface PlanResponse {
   code: Number;
@@ -106,6 +109,7 @@ export default defineComponent({
       isStarted,
       planList,
       curTeam,
+      colors
       // createPlan,
     };
   },
@@ -113,7 +117,10 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .plan-list {
-  padding: 16px;
+  padding: 16px 16px 62px;
+  height: 100vh;
+  overflow-y: scroll;
+
 
   h1 {
     /** 文本1 */
@@ -157,13 +164,33 @@ export default defineComponent({
       padding: 13px 27px;
       font-size: 12px;
       background-color: rgba(255, 170, 0, 1);
-      box-shadow: 2px 8px 20px 0px rgba(222, 148, 0, 0.4);
+      // box-shadow: 2px 8px 20px 0px rgba(222, 148, 0, 0.4);
       border-radius: 8px;
 
       h2 {
         font-size: 14px;
       }
     }
+  }
+
+  button {
+    display: inline-block;
+    color: #fff;
+    font-size: 20px;
+    padding: 20px;
+    border-radius: 211px;
+    text-align: center;
+    // width: 50px;
+    // height: 50px;
+    // line-height: 50px;
+    width: 65px;
+    background: rgba(87, 118, 242, 1);
+    box-shadow: 0px 10px 14px 0px rgba(46, 51, 54, 0.2);
+    position: fixed;
+    bottom: 50px;
+    z-index: 11;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .empty {
@@ -182,5 +209,9 @@ export default defineComponent({
       font-weight: 400;
     }
   }
+}
+
+ul li {
+  margin-bottom: 10px;
 }
 </style>

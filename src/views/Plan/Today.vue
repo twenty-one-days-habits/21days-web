@@ -11,24 +11,25 @@
     <div class="plan-today-list">
       <h3>当日任务</h3>
       <ul>
-        <li v-for="item in todayPlans" :key="item.time">
+        <li v-for="(item, index) in todayPlans" :key="item.time">
+          {{ item.checkin }}
           <van-checkbox 
-            v-model="item.checked"
+            v-model="item.checkin"
             shape="square"
-            @click="handleClick($event, item)">
-            {{ item.name }}（{{item.time }}）
+            @click="handleClick($event, index)">
+            {{ item.title }}（{{item.description }}）
           </van-checkbox>
         </li>
       </ul>
       <hr/>
       <h3>周期任务</h3>
       <ul>
-        <li v-for="item in otherPlans" :key="item.time">
+        <li v-for="item in otherPlans" :key="item.id">
           <van-checkbox
-            v-model="item.checked"
+            v-model="item.checkin"
             shape="square"
-            @click="item.checked = !item.checked">
-            {{ item.name }}（{{item.time }}）
+            @click="item.checkin = !item.checkin">
+            {{ item.title }}（{{item.time }}）
           </van-checkbox>
         </li>
       </ul>
@@ -36,51 +37,59 @@
   </div>
 </template>
 
-<script lang='ts' setup>
-import { Ref, ref } from "vue";
+<script lang='ts'>
+import { Ref, defineComponent, ref } from "vue";
+import { getTasksByDate, getMyTeams } from '../../utils/plan';
+import { reactive } from "vue";
 interface planItem {
   name: string;
   time: number;
   checked: boolean
 }
 
-let todayPlans = ref([
-  {
-    name: '学习',
-    checked: true,
-    time: 11111
+export default {
+  // data() {
+  //   return {
+  //     todayPlans: reactive([]),
+  //     otherPlans: reactive([]),
+  //     curTeamId: ''
+  //   }
+  // },
+  async mounted() {
+    const res1 = await getMyTeams();
+    console.info(res1);
+    this.curTeamId = res1.data.current_team?.[0]?.id;
+    this.getTasks(this.curTeamId)
   },
-  {
-    name: '吃早饭',
-    checked: false,
-    time: 1111
-  }, {
-    name: '画画',
-    checked: false,
-    time: 1112
-  }
-]);
-
-let otherPlans = ref([
-  {
-    name: '学习',
-    checked: false,
-    time: 11111
+  methods: {
+    handleClick(e: HTMLElement, index: number) {
+      console.info(this.todayPlans.value);
+      const item = this.todayPlans[index];
+      console.info(typeof item);
+      item.checkin = !item.checkin
+    },
+    async getTasks (teamId:string, date?: number) {
+      const userId = localStorage.userId;
+      const res = await getTasksByDate(teamId, userId, date);
+      console.info(res);
+      if(res.code === 200) {
+        this.todayPlans.push(...res.data);
+        console.info(this.todayPlans)
+      }
+    }
   },
-  {
-    name: '吃早饭',
-    checked: false,
-    time: 1111
-  }, {
-    name: '画画',
-    checked: false,
-    time: 1112
+  setup() {
+    let todayPlans = reactive([]);
+    let otherPlans = ref([]);
+    let curTeamId = ref('');
+    return {
+      todayPlans,
+      otherPlans,
+      curTeamId
+    }
   }
-])
-
-const handleClick = (e: HTMLElement, item: planItem) => {
-  item.checked = !item.checked
 }
+
 </script>
 <style lang='scss' scoped>
 .plan-today {

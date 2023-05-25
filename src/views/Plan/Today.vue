@@ -12,8 +12,8 @@
       <h3>当日任务</h3>
       <ul>
         <li v-for="(item, index) in todayPlans" :key="item.time">
-          {{ item.checkin }}
           <van-checkbox 
+          :class="[item.checkin && 'active']"
             v-model="item.checkin"
             shape="square"
             @click="handleClick($event, index)">
@@ -96,7 +96,7 @@ export default {
 }
 
 </script>
-<style lang='scss' scoped>
+<style lang='scss'>
 .plan-today {
   height: calc(100vh - 80px);
   overflow: scroll;
@@ -116,6 +116,10 @@ export default {
   li {
     font-size: 16px;
     margin-bottom: 20px;
+  } 
+  .van-checkbox.active {
+    color: rgba(0,0,0,.25);
   }
 }
+
 </style>

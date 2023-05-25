@@ -13,7 +13,7 @@
       <ul>
         <li v-for="(item, index) in todayPlans" :key="item.time">
           <van-checkbox 
-          :class="[item.checkin && 'active']"
+            :disabled="item.checkin"
             v-model="item.checkin"
             shape="square"
             @click="handleClick($event, index)">
@@ -24,14 +24,14 @@
       <hr/>
       <h3>周期任务</h3>
       <ul>
-        <li v-for="item in otherPlans" :key="item.id">
+        <!-- <li v-for="item in otherPlans" :key="item.id">
           <van-checkbox
             v-model="item.checkin"
             shape="square"
             @click="item.checkin = !item.checkin">
             {{ item.title }}（{{item.time }}）
           </van-checkbox>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>
@@ -39,8 +39,9 @@
 
 <script lang='ts'>
 import { Ref, defineComponent, ref } from "vue";
-import { getTasksByDate, getMyTeams } from '../../utils/plan';
+import { getTasksByDate, getMyTeams, checkIn } from '../../utils/plan';
 import { reactive } from "vue";
+import { showToast } from "vant";
 interface planItem {
   name: string;
   time: number;
@@ -52,18 +53,8 @@ export default {
     const res1 = await getMyTeams();
     console.info(res1);
     this.curTeamId = res1.data.current_team?.[0]?.id;
-    const getTasks = async (teamId:string, date?: number) => {
-      const userId = localStorage.userId;
-      const res = await getTasksByDate(teamId, userId, date);
-      console.info(res);
-      if(res.code === 200) {
-        this.todayPlans.push(...res.data);
-        console.info(this.todayPlans)
-      }
-    }
-    
-
-    await getTasks(this.curTeamId)
+  
+    await this.getTasks(this.curTeamId)
   },
   setup() {
     let todayPlans = reactive([]);
@@ -74,19 +65,40 @@ export default {
       otherPlans: []
     })
     
-    
+    const getTasks = async (teamId:string, date?: number) => {
+      const userId = localStorage.userId;
+      todayPlans.length = 0;
+      const res = await getTasksByDate(teamId, userId, date);
+      console.info(res);
+      if(res.code === 200) {
+        todayPlans.push(...res.data);
+        console.info(todayPlans)
+      }
+    }
 
-    const handleClick = (e: HTMLElement, index: number)  =>{
+    const handleClick = async (e: HTMLElement, index: number) => {
       const list = JSON.parse(JSON.stringify(todayPlans))
       const item = list[index];
       item.checkin = !item.checkin
+      // 请求签到接口
+      try {
+        const res = await checkIn(curTeamId.value, item.id);
+        console.info(res);
+        if(res.code === 200) {
+          showToast('签到成功');
+          // 刷新
+          getTasks(curTeamId.value)
+        } else {
+          showToast(res.message)
+        }
+      } catch(err: any) {
+        showToast(err?.response?.data?.message || err?.message || '请求出错了，稍后再试')
+      }
     };
-    
-    
    
     return {
       handleClick,
-      // getTasks,
+      getTasks,
       todayPlans,
       otherPlans,
       curTeamId,

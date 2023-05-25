@@ -54,12 +54,13 @@ export function createTask(data) {
   })
 }
 
-export function getTasksByDate(teamId:string, userId:string, date?: number) {
+export function getTasksByDate(teamId:string, userId:string, date?: Date) {
+  console.info('date', date)
   return request({
     url: `/tasks/${teamId}/${userId}`,
     method: "get",
-    data: {
-      date
+    params: {
+      date: date?.getTime()
     }
   })
 }

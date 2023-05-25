@@ -2,13 +2,16 @@
   <div class='plan-today'>
     <div class="plan-today-calendar">
       <van-calendar
+        :value="curDate"
         :poppable="false"
         :show-confirm="false"
+        @confirm="selectDate"
         row-height="40px"
         :style="{ height: '240px' }"
       />
     </div>
     <div class="plan-today-list">
+      {{ curDate }}
       <h3>当日任务</h3>
       <ul>
         <li v-for="(item, index) in todayPlans" :key="item.time">
@@ -16,8 +19,9 @@
             :disabled="item.checkin"
             v-model="item.checkin"
             shape="square"
-            @click="handleClick($event, index)">
-            {{ item.title }}（{{item.description }}）
+            label-disabled
+            @change="handleClick($event, index)">
+            {{ item.title }}（{{item.description }}
           </van-checkbox>
         </li>
       </ul>
@@ -60,12 +64,13 @@ export default {
     let todayPlans = reactive([]);
     let otherPlans = ref([]);
     let curTeamId = ref('');
+    let curDate = ref(new Date());
     const plans = reactive({
       todayPlans: [],
       otherPlans: []
     })
     
-    const getTasks = async (teamId:string, date?: number) => {
+    const getTasks = async (teamId:string, date?: Date) => {
       const userId = localStorage.userId;
       todayPlans.length = 0;
       const res = await getTasksByDate(teamId, userId, date);
@@ -95,8 +100,17 @@ export default {
         showToast(err?.response?.data?.message || err?.message || '请求出错了，稍后再试')
       }
     };
+
+    const selectDate = (value) => {
+      console.info(curDate.value, 'curDate')
+      console.info(value)
+      curDate.value = value
+      getTasks(curTeamId.value, curDate.value)
+    }
    
     return {
+      selectDate,
+      curDate,
       handleClick,
       getTasks,
       todayPlans,

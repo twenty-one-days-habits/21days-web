@@ -30,7 +30,7 @@ export function getMyTeams() {
  * 签到
  * @returns 
  */
-export function checkIn(teamId, taskId) {
+export function checkIn(teamId: string, taskId: string) {
   return request({
     url: `/tasks/checkin`,
     method: "post",
@@ -54,13 +54,13 @@ export function createTask(data) {
   })
 }
 
-export function getTasksByDate(teamId:string, userId:string, date?: Date) {
-  console.info('date', date)
+export function getTasksByDate(teamId:string, userId:string, date: string) {
+  console.info('date', date);
   return request({
     url: `/tasks/${teamId}/${userId}`,
     method: "get",
     params: {
-      date: date?.getTime()
+      date
     }
   })
 }

@@ -1,5 +1,7 @@
 <script setup lang="ts">
-  import tab from './components/Tab.vue'
+import tab from './components/Tab.vue'
+import 'vant/es/toast/style';
+
 </script>
 
 <template>

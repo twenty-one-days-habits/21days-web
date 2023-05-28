@@ -72,7 +72,7 @@ body {
     color: #000;
     font-size: 12px;
 }
-// 深色模式
+/* // 深色模式 */
 body.dark-mode {
     background: #000;
 }

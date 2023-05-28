@@ -1,48 +1,92 @@
 <template>
-    <div class="team-list">
-        <div class="team-current" v-if="false">
+    <van-loading size="24px" type="spinner" v-if="loading">加载中...</van-loading>
+    <div v-else class="team-list">
+        <textarea id="myInput" style="width:0;height:0;opacity: 0;"></textarea>
+        <div class="team-current" v-if="currentPlan">
             <div class="team-current-top">
                 <div class="team-current-left">
-                    <p class="team-current-title">团队名称</p>
-                    <p class="team-current-desc">团队描述</p>
+                    <p class="team-current-title">{{currentPlan.name}}</p>
+                    <p class="team-current-desc">{{currentPlan.description ? currentPlan.description : '暂无团队描述' }}</p>
                     <p class="team-current-time">
-                        <i></i> 创建时间：2023-01-02
+                        <i></i> 计划开始时间：{{$filters.dateFormat(currentPlan.start)}}
                     </p>
                 </div>
-                <div class="team-current-right">
-                    <i class="team-current-refresh"></i>
-                    <i class="team-current-copy">复制邀请码</i>
+                <div class="team-current-right" v-if="currentPlan.isLeader">
+                    <!-- <i class="team-current-refresh"></i> -->
+                    <i class="team-current-copy" @click="copy(currentPlan)">复制邀请码</i>
                 </div>
             </div>
             <div class="team-current-bottom">
                 <div class="team-current-left">
                     <p class="team-current-title">团队人员</p>
-                    <p class="team-current-desc"><span>小葱</span>、<span>其玲</span>等</p>
+                    <p class="team-current-desc" @click="toMember(currentPlan.id,currentPlan.name)">{{currentPlan.members}}等 &gt;</p>
                 </div>
                 <div class="team-current-right">
-                    <p class="team-current-captain">队长 <span>小葱</span></p>
-                    <div class="team-current-detail">查看详情</div>
+                    <p class="team-current-captain">队长 <span>{{currentPlan.leader_info.username}}</span></p>
+                    <div class="team-current-detail" @click="toResult(currentPlan.id,currentPlan.name)">查看详情</div>
                 </div>
             </div>
         </div>
-        <Empty />
+        <Empty v-else />
         <div class="team-history">
             <h2 class="team-history-title">
                 历史团队计划
             </h2>
-            <div class="team-history-item">
-                <p class="team-current-title">团队名称</p>
-                <p class="team-current-desc">团队描述</p>
-                <p class="team-current-desc">2019.01.01-2019.01.25</p>
-                <i class="team-history-detail">查看详情</i>
+            <div class="team-history-item" v-for="item in list" :key="item.id">
+                <p class="team-current-title">{{item.name}}</p>
+                <p class="team-current-desc">{{item.desc}}</p>
+                <p class="team-current-desc">{{$filters.dateFormat(item.start)}}</p>
+                <i class="team-history-detail" @click="toResult(item.id,item.name)">查看详情</i>
             </div>
         </div>
     </div>
 </template>
 <script lang="ts" setup>
+import { teamList } from '@/utils/team'
 import Empty from './components/Empty.vue'
 import { ref } from 'vue';
+import { useRouter} from 'vue-router'
+const router = useRouter()
 const showJoin = ref(false);
+const loading = ref(true);
+const list = ref([]);
+const currentPlan = ref(null);
+const init = async () => {
+    const { data: { data } } = await teamList();
+    currentPlan.value = { 
+        ...data.current_team[0],
+        isLeader: data.current_team[0].leader_info.id === localStorage.getItem('userId'),
+        members: data.current_team[0].members.map(member => member.user_info.username).join('、'),
+    };
+    // console.log(data.current_team[0].members)
+    list.value = data.teams;
+    loading.value = false
+}
+const toMember = (id, name) => {
+    router.push({
+        path: '/team/members/' + id +'?name=' + encodeURIComponent(name),
+        query: {
+            name: encodeURIComponent(name)
+        }
+    })
+}
+const toResult = (id, name) => {
+    router.push({
+        path: '/team/result/' + id +'?name=' + encodeURIComponent(name),
+        query: {
+            name: encodeURIComponent(name)
+        }
+    })
+}
+const copy = (plan) => {
+    const code = `${plan.id}:${plan.invitation_code}`
+    const copyText = document.getElementById("myInput");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /* 为移动设备设置 */
+    navigator.clipboard.writeText(code);
+}
+init();
+
 </script>
 
 <style lang="scss">

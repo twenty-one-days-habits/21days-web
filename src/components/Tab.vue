@@ -4,10 +4,19 @@ import { watch, ref } from 'vue'
 const router = useRouter()
 // 监听当前路由
 const showTab = ref(false)
+const toRouter = (name: string) => {
+    console.log(name);
+    router.push({
+        name
+    })
+}
 watch(
   () => router.currentRoute.value,
   (newValue: any) => {
     const name: string = newValue.name;
+    if (!name) {
+        return;
+    }    
     if (name === 'Login' || name === 'Register') {
         showTab.value = false
     } else {
@@ -25,17 +34,17 @@ watch(
         </div>
         <div>
             <span class="tab-icon tab-list"></span>
-            <span class="tab-text">计划列表</span>
+            <span class="tab-text" @click="toRouter('list')">计划列表</span>
         </div>
         <div>
             <span class="tab-icon tab-team on"></span>
-            <span class="tab-text">我的团队</span>
+            <span class="tab-text" @click="toRouter('TeamList')">我的团队</span>
         </div>
     </div>
 </template>
 <style lang="scss">
     .tab {
-        position: absolute;
+        position: fixed;
         height: 66px;
         bottom: 0;
         width: 100%;
@@ -43,6 +52,7 @@ watch(
         box-shadow: 3px 3px 10px 2px rgba(#000, 0.1);
         box-sizing: border-box;
         padding-top: 11px;
+        background: #fff;
         div {
             flex: 1;
             text-align: center;

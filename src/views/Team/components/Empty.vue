@@ -9,9 +9,6 @@
             path: '/team/create'
         })
     }
-    const joinTeam = () => {
-
-    }
     const close = () => {
         console.log('ddd');
         showJoin.value = false

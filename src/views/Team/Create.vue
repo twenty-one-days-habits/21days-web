@@ -1,6 +1,31 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { teamCreate } from '../../utils/team';
 const showCalender = ref(false);
+const time = ref(new Date());
+const name = ref('')
+const timeString = ref('')
+const description = ref('')
+
+const onConfirm = ( selectTime: Date ) => {
+    time.value = selectTime
+    timeString.value = selectTime.toLocaleDateString()
+    showCalender.value = false
+}
+let hasClick = false
+const toSet = async () => {
+    hasClick = true
+    const { data: {data}} = await teamCreate({
+        name: name.value,
+        description: description.value,
+        start: timeString.value.replaceAll('/', '-')
+    })
+    const router = useRouter()
+    router.push({
+        path: '/team/list'
+    })
+    // await 
+}
 </script>
 <template>
     <div class="team-create">
@@ -9,7 +34,7 @@ const showCalender = ref(false);
                 团队计划名称
             </div>
             <div>
-                <input class="team-create-input" placeholder="请输入团队计划名称"/>
+                <input class="team-create-input" v-model="name" placeholder="请输入团队计划名称"/>
             </div>
         </div>
         <div class="team-create-item">
@@ -17,7 +42,7 @@ const showCalender = ref(false);
                 开始日期
             </div>
             <div>
-                <input class="team-create-input" placeholder="请输入开始日期"/>
+                <input disabled="true" v-model="timeString" class="team-create-input" placeholder="请输入开始日期"/>
                 <span class="team-create-calender" @click="showCalender=true"></span>
             </div>
         </div>
@@ -26,7 +51,7 @@ const showCalender = ref(false);
                 结束日期
             </div>
             <div>
-                <input class="team-create-input" placeholder="请输入开始日期"/>
+                <input class="team-create-input" placeholder="请输入结束日期"/>
             </div>
         </div> -->
         <div class="team-create-item">
@@ -34,11 +59,11 @@ const showCalender = ref(false);
                 描述
             </div>
             <div>
-                <input class="team-create-input" placeholder="请输入开始日期"/>
+                <input class="team-create-input" v-model="description" placeholder="请输入描述"/>
             </div>
         </div>
-        <div class="btn">完成设置</div>
-        <van-calendar v-model:show="show" @confirm="onConfirm" />
+        <div class="btn primary" @click="toSet">完成设置</div>
+        <van-calendar v-model:show="showCalender" @confirm="onConfirm" />
     </div>
 </template>
 <style lang="scss" scoped>
@@ -55,6 +80,9 @@ const showCalender = ref(false);
         width: 100%;
         height: 40px;
         margin-top: 10px;
+        &:disabled {
+            background: transparent;
+        }
     }
     &-calender {
         display: block;

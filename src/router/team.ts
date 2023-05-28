@@ -4,20 +4,20 @@ const routes = [{
     path: '/team',
     component: ()=>import("../views/Team/Index.vue"),
     children: [{
-        name: 'Result',
-        path: 'result',
+        name: 'TeamResult',
+        path: 'result/:teamId',
         component: ()=>import("../views/Team/Result.vue")
     }, {
-        name: 'List',
-        path: 'list',
+        name: 'TeamList',
+        path: '/team/list',
         component: ()=>import("../views/Team/List.vue")
     }, {
-        name: 'Create',
+        name: 'TeamCreate',
         path: 'create',
         component: ()=>import("../views/Team/Create.vue")
     }, {
-        name: 'Member',
-        path: 'member',
+        name: 'TeamMember',
+        path: 'members/:teamId',
         component: ()=>import("../views/Team/Member.vue")
     }]
 }]

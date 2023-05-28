@@ -7,13 +7,12 @@ const routes = [{
       path: 'today',
       component: ()=>import("../views/Plan/Today.vue")
   }, {
-      name: 'List',
+      name: 'PlanList',
       path: 'list',
       component: ()=>import("../views/Plan/List.vue")
   }, {
-    name: 'Create',
-    path: 'create',
-    component: ()=>import("../views/Plan/Create.vue")
-  }]
+    name: 'PlanCreate',
+    path: 'create/:teamId',
+    component: ()=>import("../views/Plan/Create.vue"),
 }]
 export default routes;

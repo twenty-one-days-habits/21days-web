@@ -9,7 +9,7 @@ const routes = [{
         component: ()=>import("../views/Team/Result.vue")
     }, {
         name: 'TeamList',
-        path: '/team/list',
+        path: 'list',
         component: ()=>import("../views/Team/List.vue")
     }, {
         name: 'TeamCreate',

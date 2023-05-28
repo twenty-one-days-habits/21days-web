@@ -52,7 +52,12 @@ watch(
         box-shadow: 3px 3px 10px 2px rgba(#000, 0.1);
         box-sizing: border-box;
         padding-top: 11px;
+<<<<<<< HEAD
         background: #fff;
+=======
+        z-index: 10;
+        background-color: #fff;
+>>>>>>> feature-zt
         div {
             flex: 1;
             text-align: center;

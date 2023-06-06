@@ -1,4 +1,5 @@
 import request from './request'
+import { Plan } from '../interface/plan'
 
 /**
  * 签到
@@ -46,7 +47,7 @@ export function checkIn(teamId: string, taskId: string) {
  * @param data 
  * @returns 
  */
-export function createTask(data) {
+export function createTask(data: Plan) {
   return request({
     url: `/tasks`,
     method: "post",

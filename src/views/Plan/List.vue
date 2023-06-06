@@ -35,6 +35,8 @@ import Chart from "../../components/Chart.vue";
 import { getAllPlans, getMyTeams } from "../../utils/plan";
 import { defineComponent } from "vue";
 import { useRouter } from 'vue-router'
+import { Team, Plan } from '../../interface/plan';
+import { Ref } from "vue";
 
 const colors = ['#FFAA00', '#5776F2', '#3DB6FC', '#753ECF'];
 
@@ -56,7 +58,7 @@ export default defineComponent({
   async mounted() {
     const res1 = await getMyTeams();
     console.info(res1);
-    this.curTeam = res1.data.current_team?.[0];
+    this.curTeam  = res1.data.current_team?.[0] as Team;
     const startTime = new Date(this.curTeam.start);
     this.pastDays = Math.floor(
       (new Date().getTime() - startTime.getTime()) / 86400000
@@ -93,8 +95,8 @@ export default defineComponent({
     }
   },
   setup() {
-    let planList = ref([]);
-    let curTeam = ref([]);
+    let planList: Ref<Array<Plan>> = ref([] as Array<Plan>);
+    let curTeam: Ref<Team> = ref({} as Team);
     // const router = useRouter()
 
     // const 

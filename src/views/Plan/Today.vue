@@ -29,14 +29,14 @@
       <hr/>
       <h3>周期任务</h3>
       <ul>
-        <li v-for="item in otherPlans" :key="item.id" >
+        <li v-for="(item, index) in otherPlans" :key="item.id" >
           <van-checkbox
             :disabled="item.checkin"
             v-model="item.checkin"
             shape="square"
             label-disabled
             @change="handleClick($event, index, 'other')">
-            {{item.title}}（{{`${item.counts}/ ${item.check_in_type === '2' ? '每周' : (item.check_in_type === 3 ? '总' : '')}${item.counts}次`}}）
+            {{item.title}}（{{`${item.counts}/ ${+item.check_in_type === 2 ? '每周' : (item.check_in_type === 3 ? '总' : '')}${item.counts}次`}}）
           </van-checkbox>
         </li>
       </ul>
@@ -49,10 +49,25 @@ import { Ref, defineComponent, ref } from "vue";
 import { getTasksByDate, getMyTeams, checkIn } from '../../utils/plan';
 import { reactive } from "vue";
 import { showToast } from "vant";
+import { Team, Plan } from '../../interface/plan';
 interface planItem {
   name: string;
   time: number;
   checked: boolean
+}
+
+interface CheckInPlan extends Plan {
+  checkin: boolean,
+  time: string
+}
+
+interface DateMap {
+  'y+': number,
+  'M+': number, // 月份 "d+": value.getDate(), // 日
+  'd+': number,
+  'h+': number, // 小时 "m+": value.getMinutes(), // 分 "s+": value.getSeconds(), // 秒
+  'm+': number,
+  's+': number
 }
 
 export default defineComponent({
@@ -74,6 +89,29 @@ export default defineComponent({
     }
   },
   methods: {
+    dateFormate (timestamp: number, format = 'yyyy-MM-dd hh:mm:ss') {
+        let date = new Date(timestamp);
+        const o: any = {
+          'y+': date.getFullYear(),
+          'M+': date.getMonth() + 1, // 月份 "d+": value.getDate(), // 日
+          'd+': date.getDate(),
+          'h+': date.getHours(), // 小时 "m+": value.getMinutes(), // 分 "s+": value.getSeconds(), // 秒
+          'm+': date.getMinutes(),
+          's+': date.getSeconds()
+        };
+        if (/(y+)/.test(format)) {
+          format = format.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
+        }
+        for (let k in o) {
+          if (new RegExp('(' + k + ')').test(format)) {
+            format = format.replace(
+              RegExp.$1,
+              RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length)
+            );
+          }
+        }
+        return format;
+      },
     async getTasks (teamId:string, date: Date = new Date()) {
       const userId = localStorage.userId;
       this.allPlans.length = 0;
@@ -111,38 +149,14 @@ export default defineComponent({
     }
   },
   setup() {
-    let allPlans = reactive([]);
+    let allPlans: Ref<Array<CheckInPlan>> = ref([] as Array<CheckInPlan>);
     let curTeamId = ref('');
     let curDate = ref(new Date());
 
-    const dateFormate = (timestamp: number, format = 'yyyy-MM-dd hh:mm:ss') => {
-        let date = new Date(timestamp);
-        var o = {
-          'y+': date.getFullYear(),
-          'M+': date.getMonth() + 1, // 月份 "d+": value.getDate(), // 日
-          'd+': date.getDate(),
-          'h+': date.getHours(), // 小时 "m+": value.getMinutes(), // 分 "s+": value.getSeconds(), // 秒
-          'm+': date.getMinutes(),
-          's+': date.getSeconds()
-        };
-        if (/(y+)/.test(format)) {
-          format = format.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
-        }
-        for (var k in o) {
-          if (new RegExp('(' + k + ')').test(format)) {
-            format = format.replace(
-              RegExp.$1,
-              RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length)
-            );
-          }
-        }
-        return format;
-      }
     return {
       curDate,
       allPlans,
       curTeamId,
-      dateFormate
     }
   }
 })

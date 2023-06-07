@@ -5,21 +5,21 @@ import 'vant/es/toast/style';
 </script>
 
 <template>
-  <router-view></router-view>
+  <div class="content"><router-view></router-view></div>
   <tab></tab>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<style>
+#app {
+  height: 100vh;
+  box-sizing: border-box;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.content {
+  flex: 1;
+  overflow-y: auto;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+
 </style>

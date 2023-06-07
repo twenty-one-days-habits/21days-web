@@ -8,18 +8,19 @@ const teamId = route.params.teamId;
 const name = decodeURIComponent(route.query.name)
 let applyingList = ref([])
 let applyedList = ref([])
+import { showToast } from 'vant';
 const getList = async () => { 
     let { data: { data } } = await teamUsers(teamId, {is_allowed: false}); 
     applyingList.value = data;
     let { data: { data: newData } } = await teamUsers(teamId, {is_allowed: true}); 
     applyedList.value = newData;
-    console.log(applyingList.value, applyedList.value)
 }
 getList()
 const checked = ref([]);
 const agree = async () => {
-    const { data: { data }} = await teamApprove(teamId, checked.value)
-    console.log(data);
+    const { data } = await teamApprove(teamId, checked.value)
+    getList()
+    showToast('审核完成')
 }
  //teamUsers
 </script>
@@ -68,8 +69,8 @@ const agree = async () => {
 }
 .team-member {
     background-color: #F4F9FD;
-    min-height: 100vh;
-    padding: 30px 20px;
+    height: 100%;
+    padding: 30px 20px 0;
     &-title {
         font-size: 24px;
         margin-bottom: 15px;
@@ -86,17 +87,20 @@ const agree = async () => {
     &-item {
         height: 25px;
         line-height: 25px;
+        padding-bottom: 5px;
         input {
             display: inline-block;
             vertical-align: middle;
             margin-right: 4px;
         }
     }
-    &-appling {
-        border-bottom: 1px solid #E4E6E8;
-    }
     &-appled {
+        border-top: 1px solid #E4E6E8;
         padding-top: 10px;
+    }
+    div {
+        color: #222;
+        line-height: 25px;
     }
 }
 </style>

@@ -5,10 +5,16 @@ const router = useRouter()
 // 监听当前路由
 const showTab = ref(false)
 const toRouter = (name: string) => {
-    console.log(name);
     router.push({
         name
     })
+}
+const getOn = (context) => {
+    const { name } = router.currentRoute.value;
+    if (name.includes(context)) {
+        return 'on'
+    }
+    return ''
 }
 watch(
   () => router.currentRoute.value,
@@ -34,25 +40,24 @@ watch(
         </div>
         <div>
             <span class="tab-icon tab-list"></span>
-            <span class="tab-text" @click="toRouter('list')">计划列表</span>
+            <span class="tab-text" @click="toRouter('List')">计划列表</span>
         </div>
         <div>
-            <span class="tab-icon tab-team on"></span>
+            <span class="tab-icon tab-team" :class="getOn('Team')"></span>
             <span class="tab-text" @click="toRouter('TeamList')">我的团队</span>
         </div>
     </div>
 </template>
 <style lang="scss">
     .tab {
-        position: fixed;
         height: 66px;
-        bottom: 0;
         width: 100%;
         display: flex;
         box-shadow: 3px 3px 10px 2px rgba(#000, 0.1);
         box-sizing: border-box;
         padding-top: 11px;
-        background: #fff;
+        z-index: 10;
+        background-color: #fff;
         div {
             flex: 1;
             text-align: center;

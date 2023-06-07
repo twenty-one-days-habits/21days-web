@@ -10,7 +10,6 @@
         })
     }
     const close = () => {
-        console.log('ddd');
         showJoin.value = false
     }
 </script>

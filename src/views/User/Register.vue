@@ -4,7 +4,7 @@
         <input class="user-input" v-model="username" placeholder="请设置用户名"/>
         <input class="user-input" v-model="email" placeholder="请输入邮箱"/>
         <input class="user-input" type="password" v-model="password"  placeholder="请设置密码"/>
-        <input class="user-input" type="password"  v-model="secondPassword"  placeholder="请重新设置密码"/>
+        <input class="user-input" type="password"  v-model="secondPassword"  placeholder="请重新输入密码"/>
         <div class="btn-container">
             <Button text="注册" @click="register" className="primary"/>
             <Button text="登录" @click="login"/>
@@ -66,7 +66,6 @@ export default defineComponent({
             password,
             secondPassword,
             register,
-            toast,
             login,
         }
     },

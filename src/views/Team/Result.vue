@@ -6,6 +6,7 @@ import Button from '@/components/Button.vue'
 const route = useRoute()
 const teamId = route.params.teamId;
 const name = decodeURIComponent(route.query.name)
+
 let list = ref([])
 const getList = async () => { 
     let { data: { data } } = await getTeamStatics(teamId); 
@@ -49,9 +50,10 @@ const getWidth = ({checkin_count, total_count}) => {
 </template>
 <style lang="scss">
 .team-result {
-    min-height: 100vh;
     background-color: #F4F9FD;
     padding: 23px;
+    box-sizing: border-box;
+    min-height: 100%;
     &-title {
         font-size: 24px;
         line-height: 1.6;
@@ -61,6 +63,7 @@ const getWidth = ({checkin_count, total_count}) => {
         background-color: #FFFFFF;
         padding: 15px;
         border-bottom: 1px solid #E4E6E8;
+        margin-bottom: 20px;
     }
     &-desc {
         color: #91929E;

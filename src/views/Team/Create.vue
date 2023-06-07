@@ -1,11 +1,13 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { useRouter} from 'vue-router'
 import { teamCreate } from '../../utils/team';
 const showCalender = ref(false);
 const time = ref(new Date());
 const name = ref('')
 const timeString = ref('')
 const description = ref('')
+const router = useRouter()
 
 const onConfirm = ( selectTime: Date ) => {
     time.value = selectTime
@@ -20,7 +22,6 @@ const toSet = async () => {
         description: description.value,
         start: timeString.value.replaceAll('/', '-')
     })
-    const router = useRouter()
     router.push({
         path: '/team/list'
     })

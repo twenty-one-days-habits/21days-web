@@ -112,6 +112,7 @@ const toResult = (id, name) => {
 const copy = (plan) => {
     const code = `${plan.id}:${plan.invitation_code}`
     const copyText = document.getElementById("myInput");
+    copyText.readOnly = true;
     copyText.select();
     copyText.setSelectionRange(0, 99999); /* 为移动设备设置 */
     navigator.clipboard.writeText(code);

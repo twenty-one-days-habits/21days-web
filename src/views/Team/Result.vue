@@ -30,7 +30,7 @@ const getWidth = ({checkin_count, total_count}) => {
             <p class="team-result-name">{{item.user.username}}</p>
             <div v-if="item.statistic.length">
                 <div class="team-result-every" v-for="(plan,index1) in item.statistic" :key="index1">
-                    <img class="team-result-icon" :src="'/src/assets/icon'+(index1%3)+'.png'">
+                    <img class="team-result-icon" :src="'/assets/icon'+(index1%3)+'.png'">
                     <div class="team-result-detail">
                         <div class="team-result-back">
                             <div class="team-result-process" :style = "'width:'+getWidth(plan)"></div>

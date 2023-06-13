@@ -16,13 +16,13 @@
       </div>
     </div>
     <button class="button" @click="createPlan" v-if="planList.length">+</button>
-    <ul v-if="planList.length">
+    <ul v-if="showType === 1">
       <li v-for="(plan, index) in planList" :key="plan.id" :style="{backgroundColor: colors[index % colors.length]}">
         <h3>{{ plan.title }}</h3>
         <p>{{ plan.description }}</p>
       </li>
     </ul>
-    <div class="empty" v-else>
+    <div class="empty" v-if="showType === 2">
       <!-- <img src="../../assets/empty.png" alt="" />
       <p>你还没有创建任务哦，抓紧时间创建吧！</p> -->
       <Empty text="你还没有创建任务哦，抓紧时间创建吧！" />
@@ -86,11 +86,12 @@ export default defineComponent({
     if (this.curTeam) {
       const teamId = this.curTeam.id;
       const userId = localStorage.userId;
-      const { data, code }: any = await getAllPlans(teamId, userId, {
+      const res: any = await getAllPlans(teamId, userId, {
         date: "",
       });
-      if (code === 200) {
-        this.planList.push(...data);
+      if (res?.data?.code === 200) {
+        this.planList.push(...(res?.data?.data || []));
+        this.showType = this.planList?.length > 0 ? 1 : 2;
       }
     }
 
@@ -110,6 +111,7 @@ export default defineComponent({
     let planList: Ref<Array<Plan>> = ref([] as Array<Plan>);
     let curTeam: Ref<Team> = ref({} as Team);
     const router = useRouter()
+    const showType = ref(0)
 
     const toPlanCreate = (teamId:string) => {
       router.push({
@@ -130,7 +132,8 @@ export default defineComponent({
       planList,
       curTeam,
       colors,
-      toPlanCreate
+      toPlanCreate,
+      showType
       // createPlan,
     };
   },
@@ -188,8 +191,9 @@ export default defineComponent({
       // box-shadow: 2px 8px 20px 0px rgba(222, 148, 0, 0.4);
       border-radius: 8px;
 
-      h2 {
+      h3 {
         font-size: 14px;
+        margin-bottom: 8px;
       }
     }
   }
@@ -208,7 +212,7 @@ export default defineComponent({
     background: rgba(87, 118, 242, 1);
     box-shadow: 0px 10px 14px 0px rgba(46, 51, 54, 0.2);
     position: fixed;
-    bottom: 50px;
+    bottom: 60px;
     z-index: 11;
     left: 50%;
     transform: translateX(-50%);

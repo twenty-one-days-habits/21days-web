@@ -23,7 +23,9 @@
       </li>
     </ul>
     <div class="empty" v-else>
-      <img src="../../assets/plan/empty.png" alt="" />
+      <!-- <img src="../../assets/empty.png" alt="" />
+      <p>你还没有创建任务哦，抓紧时间创建吧！</p> -->
+      <Empty text="你还没有创建任务哦，抓紧时间创建吧！" />
       <button @click="createPlan">创建任务+</button>
     </div>
   </div>
@@ -37,6 +39,7 @@ import { defineComponent } from "vue";
 import { useRouter } from 'vue-router'
 import { Team, Plan } from '../../interface/plan';
 import { Ref } from "vue";
+import Empty from '../../components/Empty.vue'
 
 const colors = ['#FFAA00', '#5776F2', '#3DB6FC', '#753ECF'];
 
@@ -49,6 +52,7 @@ interface PlanResponse {
 export default defineComponent({
   components: {
     Chart,
+    Empty
   },
   computed: {
     text() {

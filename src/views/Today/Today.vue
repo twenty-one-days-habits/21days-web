@@ -42,7 +42,9 @@
       </ul>
     </div>
     <div class="empty">
-      <img src="../../assets/plan/empty.png" alt="" />
+      <!-- <img src="../../assets/empty.png" alt="" />
+      <p>您今天没有可执行的任务！</p> -->
+      <empty />
     </div>
   </div>
 </template>
@@ -53,6 +55,8 @@ import { getTasksByDate, getMyTeams, checkIn } from '../../utils/plan';
 import { reactive } from "vue";
 import { showToast } from "vant";
 import { Team, Plan } from '../../interface/plan';
+import Empty from '../../components/Empty.vue';
+
 interface planItem {
   name: string;
   time: number;
@@ -74,6 +78,9 @@ interface DateMap {
 }
 
 export default defineComponent({
+  components: {
+    Empty
+  },
   async mounted() {
     const res1 = await getMyTeams();
     console.info(res1);
@@ -188,6 +195,10 @@ export default defineComponent({
 .plan-today {
   height: calc(100vh - 80px);
   overflow: scroll;
+
+  &-calendar {
+    border-bottom: 1px solid #eee;
+  }
 }
 .plan-today-list {
   border-top: 1px solid #efefef;

@@ -52,6 +52,7 @@ export default defineComponent({
                 password: password.value,
                 email: email.value
             })
+            console.log(res);
             if (res.status === 200) {
                 showToast('注册成功，请登录');
                 login();

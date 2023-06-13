@@ -32,14 +32,15 @@ export default defineComponent({
     .normal {
         border: 1px solid $blue;
         color: $blue;
+        background-color: #fff;
     }
-    .btn {
-        width: 335px;
-        margin: 20px auto;
-        text-align: center;
-        height: 55px;
-        line-height: 55px;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
+    // .btn {
+    //     width: 335px;
+    //     margin: 20px auto;
+    //     text-align: center;
+    //     height: 55px;
+    //     line-height: 55px;
+    //     border-radius: 4px;
+    //     box-sizing: border-box;
+    // }
 </style>

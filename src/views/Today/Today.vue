@@ -7,12 +7,12 @@
         :min-date="new Date(2023,1,1)"
         :show-confirm="false"
         :show-title="false"
-        @confirm="selectDate"
         row-height="40px"
         :style="{ height: '240px' }"
+        @confirm="selectDate"
       />
     </div>
-    <div class="plan-today-list">
+    <div class="plan-today-list" v-if="allPlans.length">
       <h3>当日任务</h3>
       <ul>
         <li v-for="(item, index) in todayPlans" :key="item.time">
@@ -40,6 +40,9 @@
           </van-checkbox>
         </li>
       </ul>
+    </div>
+    <div class="empty">
+      <img src="../../assets/plan/empty.png" alt="" />
     </div>
   </div>
 </template>
@@ -74,9 +77,10 @@ export default defineComponent({
   async mounted() {
     const res1 = await getMyTeams();
     console.info(res1);
-    this.curTeamId = res1.data.current_team?.[0]?.id;
-  
-    await this.getTasks(this.curTeamId)
+    await this.getTeamId();
+    if(this.curTeamId) {  
+      await this.getTasks(this.curTeamId)
+    }
   },
   computed: {
     otherPlans() {
@@ -112,6 +116,25 @@ export default defineComponent({
         }
         return format;
       },
+      async getTeamId() {
+        const res = await getMyTeams();
+        console.info(res);
+        // 优先获取当前团队的id 没有的话 再获取未开始的团队计划的id
+        if(!res?.data?.data?.current_team?.length) {
+            const noStart = res.data.data.teams.find(item => {
+                return new Date(item.start).getTime() > new Date().getTime()
+            })
+            // 有未开始的团队计划
+            if (noStart?.id) {
+              this.curTeamId  = noStart.id;
+            } else {
+              return
+            }
+        } else {
+          this.curTeamId  = res.data.data.current_team[0].id;
+        }
+    
+      },
     async getTasks (teamId:string, date: Date = new Date()) {
       const userId = localStorage.userId;
       this.allPlans.length = 0;
@@ -142,8 +165,7 @@ export default defineComponent({
       }
     },
     selectDate (value: Date) {
-      console.info(this.curDate, 'curDate')
-      console.info(value);
+      if(!this.curTeamId) return
       this.curDate = value
       this.getTasks(this.curTeamId, this.curDate)
     }

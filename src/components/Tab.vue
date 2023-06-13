@@ -4,10 +4,25 @@ import { watch, ref } from 'vue'
 const router = useRouter()
 // 监听当前路由
 const showTab = ref(false)
+const toRouter = (name: string) => {
+    router.push({
+        name
+    })
+}
+const getOn = (context) => {
+    const { name } = router.currentRoute?.value;
+    if (name?.includes(context)) {
+        return 'on'
+    }
+    return ''
+}
 watch(
   () => router.currentRoute.value,
   (newValue: any) => {
     const name: string = newValue.name;
+    if (!name) {
+        return;
+    }    
     if (name === 'Login' || name === 'Register') {
         showTab.value = false
     } else {
@@ -20,24 +35,22 @@ watch(
 <template>
     <div class="tab" v-if="showTab">
         <div>
-            <span class="tab-icon tab-clock"></span>
-            <span class="tab-text">打卡任务</span>
+            <span class="tab-icon tab-clock" :class="getOn('Today')"></span>
+            <span class="tab-text" @click="toRouter('TodayIndex')">打卡任务</span>
         </div>
         <div>
-            <span class="tab-icon tab-list"></span>
-            <span class="tab-text">计划列表</span>
+            <span class="tab-icon tab-list" :class="getOn('Plan')"></span>
+            <span class="tab-text" @click="toRouter('PlanList')">计划列表</span>
         </div>
         <div>
-            <span class="tab-icon tab-team on"></span>
-            <span class="tab-text">我的团队</span>
+            <span class="tab-icon tab-team" :class="getOn('Team')"></span>
+            <span class="tab-text" @click="toRouter('TeamList')">我的团队</span>
         </div>
     </div>
 </template>
 <style lang="scss">
     .tab {
-        position: fixed;
         height: 66px;
-        bottom: 0;
         width: 100%;
         display: flex;
         box-shadow: 3px 3px 10px 2px rgba(#000, 0.1);

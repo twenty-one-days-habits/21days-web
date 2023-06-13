@@ -2,7 +2,7 @@
     <div>
         <Title title="登录" desc="登录享受独家服务" />
         <input class="user-input" v-model="userName" placeholder="请输入用户名"/>
-        <input class="user-input" v-model="password" placeholder="请输入密码"/>
+        <input class="user-input" type="password" v-model="password" placeholder="请输入密码"/>
         <div class="btn-container">
             <Button text="登录"  @click="login" className="primary"/>
             <Button text="注册"  @click="toRegister" />
@@ -16,7 +16,8 @@
 </style>
 <script lang="ts">
 import Title from './components/Title.vue'
-import Button from './components/Button.vue'
+import Button from '@/components/Button.vue'
+import { showToast } from 'vant';
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { postLogin } from '@/utils/user'
@@ -36,11 +37,22 @@ export default defineComponent({
             })
         }
         const login = async () => {
-            const res = await postLogin({
+            if (!userName.value || !password.value) {
+                showToast('请将信息填写完整')
+                return
+            }
+            const { data, status } = await postLogin({
                 username: userName.value,
                 password: password.value
             })
-            console.log(res);
+            if (+status !== 200) {
+                showToast(data.message)
+            } else {
+                localStorage.setItem('userId', data.userId)
+                router.push({
+                    path: '/team/list'
+                })
+            }
         }
         return {
             toRegister,

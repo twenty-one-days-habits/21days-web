@@ -1,12 +1,24 @@
 <script setup lang="ts">
-    import { defineEmits } from 'vue';
+    import Button from '@/components/Button.vue'
+    import { joinTeam } from 'utils/team'
+    import { defineEmits, ref } from 'vue';
+    import { showToast } from 'vant';
     const emit = defineEmits(['close']);
+    const code = ref('');
     const close = () => {
-        console.log('close');
-        console.log(emit);
         emit('close')
     }
-    const submit = () => {
+    const submit = async () => {
+        const [team_id, invitation_code] = code.value.split(':');
+        if (!team_id || !invitation_code) {
+            showToast('邀请码有误')
+            return;
+        }
+        await joinTeam({
+            team_id,
+            invitation_code,
+        })
+        showToast('申请成功，请联系队长审核')
         close()
     }
 </script>
@@ -20,11 +32,11 @@
             <div class="join-text">
                 请输入邀请码：
             </div>
-            <input class="join-input"/>
+            <input v-model="code" class="join-input"/>
             <p class="join-desc">
                 添加完成后可在计划列表中看到，可在计划列表中添加任务。
             </p>
-            <div class="btn" @click="submit">提交</div>
+            <Button text="提交"  @click="submit" className="primary"/>
         </div>
     </div>
 </template>
@@ -49,6 +61,9 @@
     border-radius: 20px;
     padding: 20px;
     box-sizing: border-box;
+    &-title {
+        font-size: 18px;
+    }
     &-close {
         float: right;
     }
@@ -67,12 +82,12 @@
         display: block;
         height: 48px;
         line-height: 48px;
-        font-size: 17px;
+        font-size: 9px;
         width: 100%;
         border: 1px solid #D8E0F0;
         border-radius: 15px;
         margin: 20px 0 30px;
-        padding: 0 15px;
+        padding: 0 10px;
         box-sizing: border-box;
     }
 }

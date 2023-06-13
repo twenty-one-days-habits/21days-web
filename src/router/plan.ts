@@ -3,17 +3,13 @@ const routes = [{
   path: '/plan',
   component: ()=>import("../views/Plan/Index.vue"),
   children: [{
-      name: 'today',
-      path: 'today',
-      component: ()=>import("../views/Plan/Today.vue")
-  }, {
       name: 'PlanList',
-      path: 'list',
+      path: '/plan/list',
       component: ()=>import("../views/Plan/List.vue")
   }, {
     name: 'PlanCreate',
-    path: 'create/:teamId',
-    component: ()=>import("../views/Plan/Create.vue"),
-}]
+    path: '/plan/create/:teamId',
+    component: ()=>import("../views/Plan/Create.vue")
+  }]
 }]
 export default routes;

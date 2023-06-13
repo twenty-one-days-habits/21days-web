@@ -1,7 +1,7 @@
 <template>
   <div class="plan-list">
-    <h1>{{ curTeam.name }}</h1>
-    <div class="plan-detail">
+    <h1 v-if="curTeam.name">{{ curTeam.name }}</h1>
+    <div class="plan-detail" v-if="curTeam.name">
       <!-- <chart class="plan-detail_chart" v-if="isStarted"/> -->
       <van-circle
         v-if="isStarted"
@@ -11,11 +11,11 @@
         :speed="100"
       />
       <div class="plan-detail_info">
-        <h3>{{ pastDays ? `已用天数：${pastDays}天` : "计划还未开始" }}</h3>
-        <p>开始时间：{{ curTeam.start }} 结束时间：{{ curTeam.end }}</p>
+        <h3>{{ pastDays > 0 ? `已用天数：${pastDays}天` : "计划还未开始" }}</h3>
+        <p>开始时间：{{ $filters.dateFormat(curTeam.start) }} 结束时间：{{ $filters.dateFormat(curTeam.end) }}</p>
       </div>
     </div>
-    <button class="button" @click="createPlan">+</button>
+    <button class="button" @click="createPlan" v-if="planList.length">+</button>
     <ul v-if="planList.length">
       <li v-for="(plan, index) in planList" :key="plan.id" :style="{backgroundColor: colors[index % colors.length]}">
         <h3>{{ plan.title }}</h3>
@@ -57,28 +57,37 @@ export default defineComponent({
   },
   async mounted() {
     const res1 = await getMyTeams();
-    console.info(res1);
-    this.curTeam  = res1.data.current_team?.[0] as Team;
+    // 优先获取当前团队的id 没有的话 再获取未开始的团队计划的id
+    if(!res1?.data?.data?.current_team?.length) {
+        const noStart = res1.data.data.teams.find(item => {
+            return new Date(item.start).getTime() > new Date().getTime()
+        })
+        // 有未开始的团队计划
+        if (noStart) {
+          this.curTeam  = noStart;
+        } else {
+          return
+        }
+    } else {
+      this.curTeam  = res1.data.data.current_team?.[0] as Team;
+    }
+    
     const startTime = new Date(this.curTeam.start);
     this.pastDays = Math.floor(
       (new Date().getTime() - startTime.getTime()) / 86400000
     );
-    console.info(startTime, this.pastDays);
     this.isStarted = this.pastDays >= 0;
     this.currentRate = this.pastDays / 21;
 
-    console.info(this.isStarted);
     if (this.curTeam) {
       const teamId = this.curTeam.id;
       const userId = localStorage.userId;
       const { data, code }: any = await getAllPlans(teamId, userId, {
         date: "",
       });
-      console.info(data);
       if (code === 200) {
         this.planList.push(...data);
       }
-      console.info(this.planList);
     }
 
     // const res = await getAllPlans(teamId, userId, {
@@ -88,16 +97,21 @@ export default defineComponent({
   },
   methods: {
     createPlan () {
+      console.info('当前队伍id', this.curTeam.id);
       // location.href = "#/plan/create";
-      this.$router.push({
-        path: `/plan/create/${this.curTeam.id}`
-      })
+      this.toPlanCreate(this.curTeam.id)
     }
   },
   setup() {
     let planList: Ref<Array<Plan>> = ref([] as Array<Plan>);
     let curTeam: Ref<Team> = ref({} as Team);
-    // const router = useRouter()
+    const router = useRouter()
+
+    const toPlanCreate = (teamId:string) => {
+      router.push({
+        path: `/plan/create/${teamId}`
+      })
+    }
 
     // const 
 
@@ -111,7 +125,8 @@ export default defineComponent({
       isStarted,
       planList,
       curTeam,
-      colors
+      colors,
+      toPlanCreate
       // createPlan,
     };
   },
@@ -119,10 +134,10 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .plan-list {
-  padding: 16px 16px 62px;
-  height: 100vh;
+  padding: 16px 16px 0;
+  min-height: 100%;
   overflow-y: scroll;
-
+  box-sizing: border-box;
 
   h1 {
     /** 文本1 */
@@ -153,7 +168,7 @@ export default defineComponent({
 
     p {
       /** 文本1 */
-      font-size: 12px;
+                 font-size: 12px;
       color: rgba(0, 0, 0, 0.45);
       margin-top: 8px;
     }
@@ -175,7 +190,7 @@ export default defineComponent({
     }
   }
 
-  button {
+  .button {
     display: inline-block;
     color: #fff;
     font-size: 20px;

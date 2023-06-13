@@ -4,10 +4,10 @@
         <input class="user-input" v-model="username" placeholder="请设置用户名"/>
         <input class="user-input" v-model="email" placeholder="请输入邮箱"/>
         <input class="user-input" type="password" v-model="password"  placeholder="请设置密码"/>
-        <input class="user-input" type="password"  v-model="secondPassword"  placeholder="请重新设置密码"/>
+        <input class="user-input" type="password"  v-model="secondPassword"  placeholder="请重新输入密码"/>
         <div class="btn-container">
             <Button text="注册" @click="register" className="primary"/>
-            <Button text="登录" />
+            <Button text="登录" @click="login"/>
         </div>
     </div>
 </template>
@@ -16,11 +16,11 @@
 </style>
 <script lang="ts">
 import Title from './components/Title.vue'
-import Button from './components/Button.vue'
+import Button from '@/components/Button.vue'
 import { defineComponent, ref } from 'vue'
 import { postRegister } from '@/utils/user'
 import { showToast } from 'vant';
-import 'vant/es/toast/style';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
     components: {
@@ -32,6 +32,12 @@ export default defineComponent({
         const email = ref('');
         const password = ref('');
         const secondPassword = ref('');
+        const router = useRouter();
+         const login = () => {
+            router.push({
+                path: '/user/login'
+            })
+        }
         const register = async () => {
             if (!password.value || !email.value || !username.value) {
                 showToast('请填写完信息')
@@ -46,19 +52,21 @@ export default defineComponent({
                 password: password.value,
                 email: email.value
             })
-            console.log(res);
+            if (res.status === 200) {
+                showToast('注册成功，请登录');
+                login();
+            } else {
+                showToast(res.data.message);
+            }
         }
-        const toast = () => {
-            showToast('失败文案');
-        }
-
+    
         return {
             username,
             email,
             password,
             secondPassword,
             register,
-            toast
+            login,
         }
     },
 })

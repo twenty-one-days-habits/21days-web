@@ -15,9 +15,12 @@ request.interceptors.request.use(config => {
 //3. 响应拦截器
 request.interceptors.response.use(response => {
   //判断code码
-  return response.data;
-}, error => {
-  return Promise.reject(error);
+  return response;
+}, ( data ) => {
+  if(+data.response.status === 500) {
+    location.href = '/#/user/login'
+  }
+  return data.response;
 });
 
 export default request;

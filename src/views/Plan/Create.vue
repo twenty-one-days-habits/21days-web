@@ -229,8 +229,9 @@ const onSubmit = async (values: any) => {
   // }
   delete data.checkInType
   const res = await createTask(data);
-  showToast(res.code === 200 ? '创建成功' : '创建失败');
-  if(res.code === 200) {
+  console.info('res', res)
+  showToast(res?.data?.code === 200 ? '创建成功' : '创建失败');
+  if(res?.data?.code === 200) {
     location.replace('#/plan/list')
   }
 };

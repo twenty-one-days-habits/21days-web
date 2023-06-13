@@ -2,13 +2,15 @@ import { createRouter,createWebHashHistory } from "vue-router";
 import user from './user' 
 import team from './team'
 import plan from './plan'
+import today from './today'
 
 const routes = [
  ...user,
  ...team,
- ...plan
+ ...plan,
+ ...today
 ]
- 
+
 const router = createRouter({
  history:createWebHashHistory('/'),
  routes

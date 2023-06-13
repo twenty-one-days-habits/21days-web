@@ -51,7 +51,7 @@ const agree = async () => {
                 </div>
                 <!-- <van-checkbox-group v-if="applyedList.length" v-model="checked"> -->
                 <div v-if="applyedList.length">
-                    <div v-for="item in applyedList" :key="item.user_id" :name="item.user_id"> 
+                    <div v-for="item in applyedList" class="team-member-appled-item" :key="item.user_id" :name="item.user_id"> 
                         {{item.user_info.username}}
                     </div>
                 </div>    
@@ -97,10 +97,10 @@ const agree = async () => {
     &-appled {
         border-top: 1px solid #E4E6E8;
         padding-top: 10px;
-    }
-    div {
-        color: #222;
-        line-height: 25px;
+        &-item {
+            color: #222;
+            line-height: 25px;
+        }
     }
 }
 </style>

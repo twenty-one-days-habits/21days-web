@@ -17,7 +17,7 @@ request.interceptors.response.use(response => {
   //判断code码
   return response;
 }, ( data ) => {
-  if(+data.response.status === 500) {
+  if(+data.response.status === 401) {
     location.href = '/#/user/login'
   }
   return data.response;

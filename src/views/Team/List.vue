@@ -16,7 +16,7 @@
                 </div>
                 <div class="team-current-right" v-if="currentPlan.isLeader&&!currentPlan.isStart">
                     <!-- <i class="team-current-refresh"></i> -->
-                    <i class="team-current-copy" @click="copy(currentPlan)">复制邀请码</i>
+                    <i class="team-current-copy" id="copyBtn" ref="copyBtn" :data-clipboard-text="currentPlan.id+':'+currentPlan.invitation_code">复制邀请码</i>
                 </div>
             </div>
             <div class="team-current-bottom">
@@ -52,6 +52,7 @@ import { ref } from 'vue';
 import { useRouter} from 'vue-router'
 import { teamUsers } from '@/utils/team'
 import { showToast } from 'vant';
+import ClipboardJS from 'clipboard'
 
 const router = useRouter()
 const showJoin = ref(false);
@@ -109,16 +110,19 @@ const toResult = (id, name) => {
         }
     })
 }
-const copy = (plan) => {
-    const code = `${plan.id}:${plan.invitation_code}`
-    const copyText = document.getElementById("myInput");
-    copyText.readOnly = true;
-    copyText.select();
-    copyText.setSelectionRange(0, 99999); /* 为移动设备设置 */
-    navigator.clipboard.writeText(code);
+
+const clipboard = new ClipboardJS('#copyBtn');
+clipboard.on('success', function(e) {
     showToast('复制成功')
-    
-}
+    e.clearSelection();
+});
+
+clipboard.on('error', function(e) {
+    console.log('Action:', e.action);
+    console.log('Trigger:', e.trigger);
+});
+    // clipboard.destroy();
+
 init();
 
 </script>

@@ -52,7 +52,7 @@ const toSet = async () => {
             </div>
             <div>
                 <input disabled="true" v-model="timeString" class="team-create-input" placeholder="请输入开始日期"/>
-                <span class="team-create-calender" @click="showCalender=true"></span>
+                <span class="team-create-calender" @click.native="showCalender=true"></span>
             </div>
         </div>
         <!-- <div class="team-create-item">

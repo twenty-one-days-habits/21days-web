@@ -11,12 +11,6 @@ const timeString = ref('')
 const description = ref('')
 const router = useRouter()
 
-const canlan = () => {
-    showToast(showCalender.value);
-    showToast('点击啦');
-    showCalender.value = true
-}
-
 const onConfirm = ( selectTime: Date ) => {
     time.value = selectTime
     timeString.value = selectTime.toLocaleDateString()
@@ -58,10 +52,8 @@ const toSet = async () => {
             </div>
             <div>
                 <input disabled="true" v-model="timeString" class="team-create-input" placeholder="请输入开始日期"/>
-                <div class="team-create-calender" @click="canlan"></div>
+                <span class="team-create-calender" @click="showCalender=true"></span>
             </div>
-                <div class="team-create-calender1" @click="canlan"></div>
-
         </div>
         <!-- <div class="team-create-item">
             <div class="team-create-label">
@@ -94,7 +86,7 @@ const toSet = async () => {
         font-size: 20px;
         border: none;
         display: block;
-        width: 100%;
+        width: calc(100% - 25px);
         height: 40px;
         margin-top: 10px;
         &:disabled {
@@ -107,15 +99,6 @@ const toSet = async () => {
         height: 20px;
         float: right;
         margin-top: -30px;
-        background-image: url('@/assets/calender.png');
-        background-size: 100% 100%;
-        z-index: 100;
-        cursor:pointer;
-    }
-     &-calender1 {
-        display: block;
-        width: 20px;
-        height: 20px;
         background-image: url('@/assets/calender.png');
         background-size: 100% 100%;
         z-index: 100;

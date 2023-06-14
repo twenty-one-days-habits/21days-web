@@ -4,6 +4,7 @@ import { useRouter} from 'vue-router'
 import { teamCreate } from '../../utils/team';
 const showCalender = ref(false);
 import Button from '@/components/Button.vue'
+import { showToast } from 'vant';
 const time = ref(new Date());
 const name = ref('')
 const timeString = ref('')
@@ -17,15 +18,22 @@ const onConfirm = ( selectTime: Date ) => {
 }
 let hasClick = false
 const toSet = async () => {
+    if (!name.value || !timeString.value) {
+        showToast('请将信息填写完整')
+    }
+    if (!hasClick) {
+        const { data: {data}} = await teamCreate({
+            name: name.value,
+            description: description.value,
+            start: timeString.value.replaceAll('/', '-')
+        })
+        router.push({
+            path: '/team/list'
+        })
+        hasClick = false
+    }
     hasClick = true
-    const { data: {data}} = await teamCreate({
-        name: name.value,
-        description: description.value,
-        start: timeString.value.replaceAll('/', '-')
-    })
-    router.push({
-        path: '/team/list'
-    }) 
+
 }
 </script>
 <template>
@@ -94,6 +102,7 @@ const toSet = async () => {
         background-image: url('@/assets/calender.png');
         background-size: 100% 100%;
         z-index: 100;
+        cursor:pointer;
     }
 }
 </style>

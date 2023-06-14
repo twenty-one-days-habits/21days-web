@@ -60,6 +60,8 @@ const toSet = async () => {
                 <input disabled="true" v-model="timeString" class="team-create-input" placeholder="请输入开始日期"/>
                 <div class="team-create-calender" @click="canlan"></div>
             </div>
+                <div class="team-create-calender1" @click="canlan"></div>
+
         </div>
         <!-- <div class="team-create-item">
             <div class="team-create-label">
@@ -105,6 +107,15 @@ const toSet = async () => {
         height: 20px;
         float: right;
         margin-top: -30px;
+        background-image: url('@/assets/calender.png');
+        background-size: 100% 100%;
+        z-index: 100;
+        cursor:pointer;
+    }
+     &-calender1 {
+        display: block;
+        width: 20px;
+        height: 20px;
         background-image: url('@/assets/calender.png');
         background-size: 100% 100%;
         z-index: 100;

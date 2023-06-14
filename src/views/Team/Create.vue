@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRouter} from 'vue-router'
 import { teamCreate } from '../../utils/team';
 const showCalender = ref(false);
+import Button from '@/components/Button.vue'
 const time = ref(new Date());
 const name = ref('')
 const timeString = ref('')
@@ -24,8 +25,7 @@ const toSet = async () => {
     })
     router.push({
         path: '/team/list'
-    })
-    // await 
+    }) 
 }
 </script>
 <template>
@@ -63,7 +63,7 @@ const toSet = async () => {
                 <input class="team-create-input" v-model="description" placeholder="请输入描述"/>
             </div>
         </div>
-        <div class="btn primary" @click="toSet">完成设置</div>
+        <Button text="完成设置"  @click="toSet" className="primary"/>
         <van-calendar v-model:show="showCalender" @confirm="onConfirm" />
     </div>
 </template>
@@ -93,6 +93,7 @@ const toSet = async () => {
         margin-top: -30px;
         background-image: url('@/assets/calender.png');
         background-size: 100% 100%;
+        z-index: 100;
     }
 }
 </style>

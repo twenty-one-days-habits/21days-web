@@ -13,7 +13,7 @@ const routes = [{
         component: ()=>import("../views/Team/List.vue")
     }, {
         name: 'TeamCreate',
-        path: 'create',
+        path: '/team/create',
         component: ()=>import("../views/Team/Create.vue")
     }, {
         name: 'TeamMember',

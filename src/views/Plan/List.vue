@@ -1,51 +1,150 @@
 <template>
   <div class="plan-list">
-    <h1>2022第13期计划</h1>
-    <div class="plan-detail">
-      <chart class="plan-detail_chart" v-if="isStarted"/>
+    <h1 v-if="curTeam.name">{{ curTeam.name }}</h1>
+    <div class="plan-detail" v-if="curTeam.name">
+      <!-- <chart class="plan-detail_chart" v-if="isStarted"/> -->
+      <van-circle
+        v-if="isStarted"
+        class="plan-detail_chart"
+        v-model:current-rate="currentRate"
+        :rate="30"
+        :speed="100"
+      />
       <div class="plan-detail_info">
-        <h3>{{isStarted ? '已用天数：xx天' : '计划还未开始'}}</h3>
-        <p>开始时间：2023.03.09 结束时间：2023.01.09</p>
+        <h3>{{ pastDays > 0 ? `已用天数：${pastDays}天` : "计划还未开始" }}</h3>
+        <p>开始时间：{{ $filters.dateFormat(curTeam.start) }} 结束时间：{{ $filters.dateFormat(curTeam.end) }}</p>
       </div>
     </div>
-    <ul v-if="planList.length">
-      <li v-for="plan in planList" :key="plan.id">
-        <h3>{{plan.title}}</h3>
-        <p>{{plan.desc}}</p>
+    <button class="button" @click="createPlan" v-if="planList.length">+</button>
+    <ul v-if="showType === 1">
+      <li v-for="(plan, index) in planList" :key="plan.id" :style="{backgroundColor: colors[index % colors.length]}">
+        <h3>{{ plan.title }}</h3>
+        <p>{{ plan.description }}</p>
       </li>
     </ul>
-    <div class="empty" v-else>
-      <img src="../../assets/plan/empty.png" alt="">
-      <button>创建任务+</button>
+    <div class="empty" v-if="showType === 2">
+      <!-- <img src="../../assets/empty.png" alt="" />
+      <p>你还没有创建任务哦，抓紧时间创建吧！</p> -->
+      <Empty text="你还没有创建任务哦，抓紧时间创建吧！" />
+      <button @click="createPlan">创建任务+</button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import chart from '../../components/Chart.vue';
+import { reactive, ref } from "vue";
+import Chart from "../../components/Chart.vue";
+import { getAllPlans, getMyTeams } from "../../utils/plan";
+import { defineComponent } from "vue";
+import { useRouter } from 'vue-router'
+import { Team, Plan } from '../../interface/plan';
+import { Ref } from "vue";
+import Empty from '../../components/Empty.vue'
 
-export default {
+const colors = ['#FFAA00', '#5776F2', '#3DB6FC', '#753ECF'];
+
+interface PlanResponse {
+  code: Number;
+  message: String;
+  data: any;
+}
+
+export default defineComponent({
   components: {
-    chart
+    Chart,
+    Empty
+  },
+  computed: {
+    text() {
+      return this.currentRate.toFixed(2) + "%";
+    },
+  },
+  async mounted() {
+    const res1 = await getMyTeams();
+    // 优先获取当前团队的id 没有的话 再获取未开始的团队计划的id
+    if(!res1?.data?.data?.current_team?.length) {
+        const noStart = res1.data.data.teams.find(item => {
+            return new Date(item.start).getTime() > new Date().getTime()
+        })
+        // 有未开始的团队计划
+        if (noStart) {
+          this.curTeam  = noStart;
+        } else {
+          return
+        }
+    } else {
+      this.curTeam  = res1.data.data.current_team?.[0] as Team;
+    }
+    
+    const startTime = new Date(this.curTeam.start);
+    this.pastDays = Math.floor(
+      (new Date().getTime() - startTime.getTime()) / 86400000
+    );
+    this.isStarted = this.pastDays >= 0;
+    this.currentRate = this.pastDays / 21;
+
+    if (this.curTeam) {
+      const teamId = this.curTeam.id;
+      const userId = localStorage.userId;
+      const res: any = await getAllPlans(teamId, userId, {
+        date: "",
+      });
+      if (res?.data?.code === 200) {
+        this.planList.push(...(res?.data?.data || []));
+        this.showType = this.planList?.length > 0 ? 1 : 2;
+      }
+    }
+
+    // const res = await getAllPlans(teamId, userId, {
+    //   date: ''
+    // });
+    // console.info(res)
+  },
+  methods: {
+    createPlan () {
+      console.info('当前队伍id', this.curTeam.id);
+      // location.href = "#/plan/create";
+      this.toPlanCreate(this.curTeam.id)
+    }
   },
   setup() {
-    const mockPlanList = [
-      {
-        id: 1,
-        title: '学习英语',
-        desc: '进行英语学习'
-      }
-    ]
-    return {
-      isStarted: true,
-      planList: mockPlanList
+    let planList: Ref<Array<Plan>> = ref([] as Array<Plan>);
+    let curTeam: Ref<Team> = ref({} as Team);
+    const router = useRouter()
+    const showType = ref(0)
+
+    const toPlanCreate = (teamId:string) => {
+      router.push({
+        path: `/plan/create/${teamId}`
+      })
     }
-  }
-}
+
+    // const 
+
+    const isStarted = ref(false);
+    const pastDays = ref(0);
+    const currentRate = ref(0);
+
+    return {
+      currentRate,
+      pastDays,
+      isStarted,
+      planList,
+      curTeam,
+      colors,
+      toPlanCreate,
+      showType
+      // createPlan,
+    };
+  },
+});
 </script>
 <style lang="scss" scoped>
 .plan-list {
-  padding: 16px;
+  padding: 16px 16px 0;
+  min-height: 100%;
+  overflow-y: scroll;
+  box-sizing: border-box;
 
   h1 {
     /** 文本1 */
@@ -76,7 +175,7 @@ export default {
 
     p {
       /** 文本1 */
-      font-size: 12px;
+                 font-size: 12px;
       color: rgba(0, 0, 0, 0.45);
       margin-top: 8px;
     }
@@ -89,19 +188,40 @@ export default {
       padding: 13px 27px;
       font-size: 12px;
       background-color: rgba(255, 170, 0, 1);
-      box-shadow: 2px 8px 20px 0px rgba(222, 148, 0, 0.4);
+      // box-shadow: 2px 8px 20px 0px rgba(222, 148, 0, 0.4);
       border-radius: 8px;
 
-      h2 {
+      h3 {
         font-size: 14px;
+        margin-bottom: 8px;
       }
     }
+  }
+
+  .button {
+    display: inline-block;
+    color: #fff;
+    font-size: 20px;
+    padding: 20px;
+    border-radius: 211px;
+    text-align: center;
+    // width: 50px;
+    // height: 50px;
+    // line-height: 50px;
+    width: 65px;
+    background: rgba(87, 118, 242, 1);
+    box-shadow: 0px 10px 14px 0px rgba(46, 51, 54, 0.2);
+    position: fixed;
+    bottom: 60px;
+    z-index: 11;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .empty {
     text-align: center;
     padding-top: 12px;
-    
+
     button {
       color: #fff;
       width: 144px;
@@ -114,5 +234,9 @@ export default {
       font-weight: 400;
     }
   }
+}
+
+ul li {
+  margin-bottom: 10px;
 }
 </style>

@@ -10,8 +10,8 @@ const toRouter = (name: string) => {
     })
 }
 const getOn = (context) => {
-    const { name } = router.currentRoute.value;
-    if (name.includes(context)) {
+    const { name } = router.currentRoute?.value;
+    if (name?.includes(context)) {
         return 'on'
     }
     return ''
@@ -35,12 +35,12 @@ watch(
 <template>
     <div class="tab" v-if="showTab">
         <div>
-            <span class="tab-icon tab-clock"></span>
-            <span class="tab-text">打卡任务</span>
+            <span class="tab-icon tab-clock" :class="getOn('Today')"></span>
+            <span class="tab-text" @click="toRouter('TodayIndex')">打卡任务</span>
         </div>
         <div>
-            <span class="tab-icon tab-list"></span>
-            <span class="tab-text" @click="toRouter('List')">计划列表</span>
+            <span class="tab-icon tab-list" :class="getOn('Plan')"></span>
+            <span class="tab-text" @click="toRouter('PlanList')">计划列表</span>
         </div>
         <div>
             <span class="tab-icon tab-team" :class="getOn('Team')"></span>

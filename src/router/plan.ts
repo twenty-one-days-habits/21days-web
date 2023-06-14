@@ -3,16 +3,12 @@ const routes = [{
   path: '/plan',
   component: ()=>import("../views/Plan/Index.vue"),
   children: [{
-      name: 'today',
-      path: 'today',
-      component: ()=>import("../views/Plan/Today.vue")
-  }, {
-      name: 'List',
-      path: 'list',
+      name: 'PlanList',
+      path: '/plan/list',
       component: ()=>import("../views/Plan/List.vue")
   }, {
-    name: 'Create',
-    path: 'create',
+    name: 'PlanCreate',
+    path: '/plan/create/:teamId',
     component: ()=>import("../views/Plan/Create.vue")
   }]
 }]

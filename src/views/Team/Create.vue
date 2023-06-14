@@ -11,6 +11,12 @@ const timeString = ref('')
 const description = ref('')
 const router = useRouter()
 
+const canlan = () => {
+    showToast(showCalender.value);
+    showToast('点击啦');
+    showCalender.value = true
+}
+
 const onConfirm = ( selectTime: Date ) => {
     time.value = selectTime
     timeString.value = selectTime.toLocaleDateString()
@@ -52,7 +58,7 @@ const toSet = async () => {
             </div>
             <div>
                 <input disabled="true" v-model="timeString" class="team-create-input" placeholder="请输入开始日期"/>
-                <span class="team-create-calender" @click.native="showCalender=true"></span>
+                <div class="team-create-calender" @click="canlan"></div>
             </div>
         </div>
         <!-- <div class="team-create-item">

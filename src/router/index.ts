@@ -5,6 +5,11 @@ import plan from './plan'
 import today from './today'
 
 const routes = [
+ {
+    name: 'Main',
+    path: '/',
+    redirect: '/team/list'
+ },
  ...user,
  ...team,
  ...plan,

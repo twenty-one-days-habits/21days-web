@@ -13,7 +13,7 @@ const router = useRouter()
 
 const onConfirm = ( selectTime: Date ) => {
     time.value = selectTime
-    timeString.value = selectTime.toLocaleDateString()
+    timeString.value = selectTime.toISOString().slice(0, 10)
     showCalender.value = false
 }
 let hasClick = false

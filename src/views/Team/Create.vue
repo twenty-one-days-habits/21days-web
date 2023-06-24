@@ -5,15 +5,16 @@ import { teamCreate } from '../../utils/team';
 const showCalender = ref(false);
 import Button from '@/components/Button.vue'
 import { showToast } from 'vant';
-const time = ref(new Date());
 const name = ref('')
 const timeString = ref('')
 const description = ref('')
 const router = useRouter()
 
 const onConfirm = ( selectTime: Date ) => {
-    time.value = selectTime
-    timeString.value = selectTime.toISOString().slice(0, 10)
+    // 全球标准时间的差别
+    const timeOffset = new Date().getTimezoneOffset() * 60 * 1000
+    console.log(new Date(selectTime.getTime() - timeOffset).toISOString());
+    timeString.value = new Date(selectTime.getTime() - timeOffset).toISOString().slice(0, 10);
     showCalender.value = false
 }
 let hasClick = false

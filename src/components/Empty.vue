@@ -1,7 +1,7 @@
 <template>
   <div class='empty-wrapper'>
     <img src="@/assets/empty.png" alt="" />
-    <p>{{ text }}</p>
+    <p v-html="text"></p>
   </div>
 </template>
 
@@ -20,6 +20,9 @@ export default {
 //@import url(); 引入公共css类
 .empty-wrapper {
   text-align: center;
-  padding-top: 30px;
+  padding-top: 15vh;
+  p {
+    line-height: 1.5;
+  }
 }
 </style>

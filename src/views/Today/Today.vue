@@ -87,6 +87,8 @@ export default defineComponent({
     await this.getTeamId();
     if(this.curTeamId) {  
       await this.getTasks(this.curTeamId)
+    } else {
+      this.showType = 2
     }
   },
   computed: {

@@ -9,10 +9,14 @@
         v-model:current-rate="currentRate"
         :rate="30"
         :speed="100"
+        stroke-width="100"
+        size="38px"
+        color="#3F8CFF"
+        layer-color="rgba(125, 133, 146, 0.2)"
       />
       <div class="plan-detail_info">
         <h3>{{ pastDays > 0 ? `已用天数：${pastDays}天` : "计划还未开始" }}</h3>
-        <p>开始时间：{{ $filters.dateFormat(curTeam.start) }} 结束时间：{{ $filters.dateFormat(curTeam.end) }}</p>
+        <p>开始时间：{{ $filters.dateFormat(curTeam.start, 'yyyy.MM.dd') }} 结束时间：{{ $filters.dateFormat(curTeam.end, 'yyyy.MM.dd') }}</p>
       </div>
     </div>
     <button class="button" @click="createPlan" v-if="planList.length">+</button>
@@ -161,7 +165,7 @@ export default defineComponent({
     color: rgba(10, 22, 41, 1);
     border-radius: 14px;
     background-color: rgba(244, 249, 253, 1);
-    padding: 20px;
+    padding: 16px 10px 16px 12px;
     display: flex;
     align-items: center;
 
@@ -178,6 +182,7 @@ export default defineComponent({
                  font-size: 12px;
       color: rgba(0, 0, 0, 0.45);
       margin-top: 8px;
+      word-break: break-all;
     }
   }
 

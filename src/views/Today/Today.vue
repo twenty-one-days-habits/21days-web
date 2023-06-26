@@ -12,7 +12,7 @@
         @confirm="selectDate"
       />
     </div>
-    <div class="plan-today-list" v-if="allPlans.length">
+    <div class="plan-today-list" v-if="showType === 1">
       <h3>当日任务</h3>
       <ul>
         <li v-for="(item, index) in todayPlans" :key="item.time">
@@ -41,7 +41,7 @@
         </li>
       </ul>
     </div>
-    <div class="empty">
+    <div class="empty" v-if="showType === 2">
       <!-- <img src="../../assets/empty.png" alt="" />
       <p>您今天没有可执行的任务！</p> -->
       <empty />
@@ -134,8 +134,6 @@ export default defineComponent({
             // 有未开始的团队计划
             if (noStart?.id) {
               this.curTeamId  = noStart.id;
-            } else {
-              return
             }
         } else {
           this.curTeamId  = res.data.data.current_team[0].id;
@@ -145,11 +143,11 @@ export default defineComponent({
     async getTasks (teamId:string, date: Date = new Date()) {
       const userId = localStorage.userId;
       this.allPlans.length = 0;
-      const res = await getTasksByDate(teamId, userId, this.dateFormate(date?.getTime(), 'yyyy-MM-dd'));
-      console.info(res);
-      if(res.code === 200) {
-        this.allPlans.push(...res.data);
-        console.info(this.allPlans)
+      const { data } = await getTasksByDate(teamId, userId, this.dateFormate(date?.getTime(), 'yyyy-MM-dd'));
+      console.info(data);
+      if(data?.code === 200) {
+        this.allPlans.push(...data.data);
+        this.showType = this.allPlans?.length > 0 ? 1 : 2;
       }
     },
     async handleClick (e: HTMLElement, index: number, type: string) {
@@ -181,11 +179,13 @@ export default defineComponent({
     let allPlans: Ref<Array<CheckInPlan>> = ref([] as Array<CheckInPlan>);
     let curTeamId = ref('');
     let curDate = ref(new Date());
+    let showType = ref(0);
 
     return {
       curDate,
       allPlans,
       curTeamId,
+      showType
     }
   }
 })
@@ -197,27 +197,29 @@ export default defineComponent({
   overflow: scroll;
 
   &-calendar {
-    border-bottom: 1px solid #eee;
+    // border-bottom: 1px solid #eee;
   }
 }
 .plan-today-list {
   border-top: 1px solid #efefef;
   padding: 30px;
-  padding-top: 15px;
-  margin-top: 15px;
+  padding-top: 30px;
   h3 {
     font-size: 18px;
   }
   hr {
     border-color: rgba(0, 0, 0, 0.06);
-    margin: 10px 0;
+    margin: 15px 0;
   }
   ul {
-    padding: 16px 0;
+    padding: 16px 0 0;
   }
   li {
     font-size: 16px;
     margin-bottom: 20px;
+    &::last-child {
+      margin-bottom: 0;
+    }
   }
   .van-checkbox {
     font-weight: bold;

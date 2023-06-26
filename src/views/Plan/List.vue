@@ -29,8 +29,8 @@
     <div class="empty" v-if="showType === 2">
       <!-- <img src="../../assets/empty.png" alt="" />
       <p>你还没有创建任务哦，抓紧时间创建吧！</p> -->
-      <Empty text="你还没有创建任务哦，抓紧时间创建吧！" />
-      <button @click="createPlan">创建任务+</button>
+      <Empty :text="curTeam.id ? '你还没有创建任务哦，抓紧时间创建吧！' : '你还没有加入任何团队，<br/>点击我的团队去加入或者创建团队吧！'" />
+      <button v-if="curTeam.id" @click="createPlan">'创建任务 +</button>
     </div>
   </div>
 </template>
@@ -74,6 +74,7 @@ export default defineComponent({
         if (noStart) {
           this.curTeam  = noStart;
         } else {
+          this.showType = 2
           return
         }
     } else {
@@ -225,7 +226,6 @@ export default defineComponent({
 
   .empty {
     text-align: center;
-    padding-top: 12px;
 
     button {
       color: #fff;

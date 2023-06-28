@@ -19,7 +19,7 @@
         <p>开始时间：{{ $filters.dateFormat(curTeam.start, 'yyyy.MM.dd') }} 结束时间：{{ $filters.dateFormat(curTeam.end, 'yyyy.MM.dd') }}</p>
       </div>
     </div>
-    <button class="button" @click="createPlan" v-if="planList.length">+</button>
+    <div class="create-button" @click="createPlan" v-if="planList.length"></div>
     <ul v-if="showType === 1">
       <li v-for="(plan, index) in planList" :key="plan.id" :style="{backgroundColor: colors[index % colors.length]}">
         <h3>{{ plan.title }}</h3>
@@ -204,17 +204,17 @@ export default defineComponent({
     }
   }
 
-  .button {
+  .create-button {
     display: inline-block;
     color: #fff;
     font-size: 20px;
-    padding: 20px;
     border-radius: 211px;
     text-align: center;
     // width: 50px;
     // height: 50px;
     // line-height: 50px;
-    width: 65px;
+    width: 36px;
+    height: 36px;
     background: rgba(87, 118, 242, 1);
     box-shadow: 0px 10px 14px 0px rgba(46, 51, 54, 0.2);
     position: fixed;
@@ -222,6 +222,26 @@ export default defineComponent({
     z-index: 11;
     left: 50%;
     transform: translateX(-50%);
+    &::before {
+      content: '';
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: #fff;
+      position: absolute;
+      top: 17px;
+      left: 9px;
+    }
+    &::after {
+      content: '';
+      display: block;
+      height: 18px;
+      width: 2px;
+      background: #fff;
+      position: absolute;
+      left: 17px;
+      top: 9px;
+    }
   }
 
   .empty {

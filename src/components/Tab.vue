@@ -34,28 +34,28 @@ watch(
 </script>
 <template>
     <div class="tab" v-if="showTab">
-        <div>
+        <div @click="toRouter('TodayIndex')">
             <span class="tab-icon tab-clock" :class="getOn('Today')"></span>
-            <span class="tab-text" @click="toRouter('TodayIndex')">打卡任务</span>
+            <span class="tab-text">打卡任务</span>
         </div>
-        <div>
+        <div @click="toRouter('PlanList')">
             <span class="tab-icon tab-list" :class="getOn('Plan')"></span>
-            <span class="tab-text" @click="toRouter('PlanList')">计划列表</span>
+            <span class="tab-text">计划列表</span>
         </div>
-        <div>
+        <div @click="toRouter('TeamList')">
             <span class="tab-icon tab-team" :class="getOn('Team')"></span>
-            <span class="tab-text" @click="toRouter('TeamList')">我的团队</span>
+            <span class="tab-text">我的团队</span>
         </div>
     </div>
 </template>
 <style lang="scss">
     .tab {
-        height: 66px;
+        height: 56px;
         width: 100%;
         display: flex;
         box-shadow: 3px 3px 10px 2px rgba(#000, 0.1);
         box-sizing: border-box;
-        padding-top: 11px;
+        padding-top: 5px;
         z-index: 10;
         background-color: #fff;
         div {
@@ -67,11 +67,11 @@ watch(
         }
         &-text {
             font-size: 11px;
-            padding-top: 8px;
+            padding-top: 2px;
         }
         &-icon {
             width: 28px;
-            height: 25px;
+            height: 28px;
             background-size: 100% 100%;
             margin: 0 auto;
         }

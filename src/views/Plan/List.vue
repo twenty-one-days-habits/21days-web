@@ -7,7 +7,7 @@
         v-if="isStarted"
         class="plan-detail_chart"
         v-model:current-rate="currentRate"
-        :rate="30"
+        :rate="pastDays/21*100"
         :speed="100"
         stroke-width="100"
         size="38px"
@@ -213,8 +213,8 @@ export default defineComponent({
     // width: 50px;
     // height: 50px;
     // line-height: 50px;
-    width: 36px;
-    height: 36px;
+    width: 46px;
+    height: 46px;
     background: rgba(87, 118, 242, 1);
     box-shadow: 0px 10px 14px 0px rgba(46, 51, 54, 0.2);
     position: fixed;
@@ -225,22 +225,22 @@ export default defineComponent({
     &::before {
       content: '';
       display: block;
-      width: 18px;
+      width: 26px;
       height: 2px;
       background: #fff;
       position: absolute;
-      top: 17px;
-      left: 9px;
+      top: 22px;
+      left: 11px;
     }
     &::after {
       content: '';
       display: block;
-      height: 18px;
+      height: 26px;
       width: 2px;
       background: #fff;
       position: absolute;
-      left: 17px;
-      top: 9px;
+      left: 22px;
+      top: 11px;
     }
   }
 

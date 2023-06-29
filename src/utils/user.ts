@@ -15,3 +15,10 @@ export function postRegister (data: any) {
         data
     })
 }
+
+export function logout () {
+    return request({
+        url: '/users/logout',
+        method: "post",
+    })
+}

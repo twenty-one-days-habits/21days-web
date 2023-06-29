@@ -46,6 +46,10 @@ watch(
             <span class="tab-icon tab-team" :class="getOn('Team')"></span>
             <span class="tab-text">我的团队</span>
         </div>
+        <div @click="toRouter('Home')">
+            <span class="tab-icon tab-home" :class="getOn('Home')"></span>
+            <span class="tab-text">个人信息</span>
+        </div>
     </div>
 </template>
 <style lang="scss">
@@ -87,10 +91,16 @@ watch(
                 background-image: url('@/assets/tab_plan_on.png');
             }
         }
-         &-team {
+        &-team {
             background-image: url('@/assets/tab_team.png');
             &.on {
                 background-image: url('@/assets/tab_team_on.png');
+            }
+        }
+        &-home {
+            background-image: url('@/assets/tab_home.png');
+            &.on {
+                background-image: url('@/assets/tab_home_on.png');
             }
         }
     }

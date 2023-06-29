@@ -13,7 +13,12 @@ const routes = [
  ...user,
  ...team,
  ...plan,
- ...today
+ ...today,
+ {
+   name: 'Home',
+   path: '/home',
+   component: ()=>import("../views/Home/Index.vue"),
+ }
 ]
 
 const router = createRouter({

@@ -174,6 +174,7 @@ init();
     }
     &-time {
         color: $gray;
+        margin-top: 10px;
         i {
             display: inline-block;
             width: 15px;

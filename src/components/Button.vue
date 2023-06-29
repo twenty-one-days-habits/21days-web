@@ -34,6 +34,10 @@ export default defineComponent({
         color: $blue;
         background-color: #fff;
     }
+    .logout {
+        background-color: #000;
+        color: #fff;
+    }
     // .btn {
     //     width: 335px;
     //     margin: 20px auto;

@@ -49,6 +49,11 @@ export default defineComponent({
                 showToast(data.message)
             } else {
                 localStorage.setItem('userId', data.userId)
+                const info = {
+                    username: userName.value,
+                    email: data.providerUid
+                }
+                localStorage.setItem('userInfo', JSON.stringify(info))
                 router.push({
                     path: '/team/list'
                 })

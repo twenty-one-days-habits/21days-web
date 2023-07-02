@@ -30,7 +30,7 @@
       <!-- <img src="../../assets/empty.png" alt="" />
       <p>你还没有创建任务哦，抓紧时间创建吧！</p> -->
       <Empty :text="curTeam.id ? '你还没有创建任务哦，抓紧时间创建吧！' : '你还没有加入任何团队，<br/>点击我的团队去加入或者创建团队吧！'" />
-      <button v-if="curTeam.id" @click="createPlan">'创建任务 +</button>
+      <button v-if="curTeam.id" @click="createPlan">创建任务 +</button>
     </div>
   </div>
 </template>

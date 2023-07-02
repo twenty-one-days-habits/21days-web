@@ -22,7 +22,7 @@
             shape="square"
             label-disabled
             @change="handleClick($event, index, 'today')">
-            {{ item.title }}（{{item.description }}
+            {{ item.title }}（{{item.description }}）
           </van-checkbox>
         </li>
       </ul>
@@ -94,11 +94,11 @@ export default defineComponent({
   computed: {
     otherPlans() {
       if(!this.allPlans) return [];
-      return this.allPlans.filter(v => v?.counts > 0);
+      return this.allPlans.filter(v => +v?.check_in_type === 3);
     },
     todayPlans() {
       if(!this.allPlans) return [];
-      return this.allPlans.filter(v => v.counts === 0);
+      return this.allPlans.filter(v => +v.check_in_type < 3);
     }
   },
   methods: {
@@ -145,6 +145,8 @@ export default defineComponent({
     async getTasks (teamId:string, date: Date = new Date()) {
       const userId = localStorage.userId;
       this.allPlans.length = 0;
+      // 清空数组
+      this.allPlans = []
       const { data } = await getTasksByDate(teamId, userId, this.dateFormate(date?.getTime(), 'yyyy-MM-dd'));
       console.info(data);
       if(data?.code === 200) {
@@ -158,14 +160,14 @@ export default defineComponent({
       item.checkin = !item.checkin
       // 请求签到接口
       try {
-        const res = await checkIn(this.curTeamId, item.id);
-        console.info(res);
-        if(res.code === 200) {
+        const { data } = await checkIn(this.curTeamId, item.id);
+        console.info(data);
+        if(data.code === 200) {
           showToast('签到成功');
           // 刷新
           this.getTasks(this.curTeamId)
         } else {
-          showToast(res.message)
+          showToast(data.message)
         }
       } catch(err: any) {
         showToast(err?.response?.data?.message || err?.message || '请求出错了，稍后再试')

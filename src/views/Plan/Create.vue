@@ -214,7 +214,7 @@ const onSubmit = async (values: any) => {
       everyday: 0,
       days: days.value,
       check_in_type: +values.checkInType,
-      counts: "",
+      counts: values.counts,
       score: +values.score
     }
   }

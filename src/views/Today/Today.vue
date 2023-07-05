@@ -22,7 +22,7 @@
             shape="square"
             label-disabled
             @change="handleClick($event, index, 'today')">
-            {{ item.title }}（{{item.description }}）
+            {{ item.title }}<span v-if="item.description">（{{item.description }}）</span>
           </van-checkbox>
         </li>
       </ul>
@@ -36,7 +36,7 @@
             shape="square"
             label-disabled
             @change="handleClick($event, index, 'other')">
-            {{item.title}}（{{`${item.counts}/ ${+item.check_in_type === 2 ? '每周' : (item.check_in_type === 3 ? '总' : '')}${item.counts}次`}}）
+            {{item.title}}（{{`${item.check_in_type === 3 ? '完成' : ''}${item.counts}/ ${+item.check_in_type === 2 ? '每周' : (item.check_in_type === 3 ? '总' : '')}${item.counts}次`}}）
           </van-checkbox>
         </li>
       </ul>

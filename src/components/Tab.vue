@@ -22,8 +22,9 @@ watch(
     const name: string = newValue.name;
     if (!name) {
         return;
-    }    
-    if (name === 'Login' || name === 'Register') {
+    }
+    const hideTab = ['Login', 'Register', 'Forget', 'Reset']
+    if (hideTab.includes(name)) {
         showTab.value = false
     } else {
         showTab.value = true

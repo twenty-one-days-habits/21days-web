@@ -15,15 +15,18 @@
         layer-color="rgba(125, 133, 146, 0.2)"
       />
       <div class="plan-detail_info">
-        <h3>{{ pastDays > 0 ? `已用天数：${pastDays}天` : "计划还未开始" }}</h3>
+        <h3>{{ pastDays >= 0 ? `第${pastDays + 1}天` : "计划还未开始" }}</h3>
         <p>开始时间：{{ $filters.dateFormat(curTeam.start, 'yyyy.MM.dd') }} 结束时间：{{ $filters.dateFormat(curTeam.end, 'yyyy.MM.dd') }}</p>
       </div>
     </div>
-    <div class="create-button" @click="createPlan" v-if="planList.length"></div>
+    <div class="create-button" @click="createPlan" v-if="curTeam.id&&!isStarted"></div>
     <ul v-if="showType === 1">
-      <li v-for="(plan, index) in planList" :key="plan.id" :style="{backgroundColor: colors[index % colors.length]}">
+      <li v-for="(plan, index) in planList" :key="plan.id" :style="{backgroundColor: colors[index % colors.length]}" @click="toDetail(plan)">
         <h3>{{ plan.title }}</h3>
-        <p>{{ plan.description }}</p>
+        <p>{{ plan.description ? plan.description : '暂无描述' }}</p>
+        <div class="create-arrow">
+          <van-icon name="arrow" size="20" color="#fff"/>
+        </div>
       </li>
     </ul>
     <div class="empty" v-if="showType === 2">
@@ -38,7 +41,7 @@
 <script lang="ts">
 import { reactive, ref } from "vue";
 import Chart from "../../components/Chart.vue";
-import { getAllPlans, getMyTeams } from "../../utils/plan";
+import { getTasksList, getMyTeams } from "../../utils/plan";
 import { defineComponent } from "vue";
 import { useRouter } from 'vue-router'
 import { Team, Plan } from '../../interface/plan';
@@ -65,11 +68,13 @@ export default defineComponent({
   },
   async mounted() {
     const res1 = await getMyTeams();
+    console.log(res1)
     // 优先获取当前团队的id 没有的话 再获取未开始的团队计划的id
     if(!res1?.data?.data?.current_team?.length) {
-        const noStart = res1.data.data.teams.find(item => {
-            return new Date(item.start).getTime() > new Date().getTime()
+      const noStart = res1.data.data.teams.find(item => {
+        return new Date(item.start).getTime() > new Date().getTime()
         })
+          console.log(noStart)
         // 有未开始的团队计划
         if (noStart) {
           this.curTeam  = noStart;
@@ -78,22 +83,23 @@ export default defineComponent({
           return
         }
     } else {
+      console.log('kdkdkddk');
       this.curTeam  = res1.data.data.current_team?.[0] as Team;
     }
     
     const startTime = new Date(this.curTeam.start);
+    console.log(startTime, this.curTeam.start);
     this.pastDays = Math.floor(
       (new Date().getTime() - startTime.getTime()) / 86400000
     );
+    console.log(this.pastDays)
     this.isStarted = this.pastDays >= 0;
     this.currentRate = this.pastDays / 21;
 
     if (this.curTeam) {
       const teamId = this.curTeam.id;
       const userId = localStorage.userId;
-      const res: any = await getAllPlans(teamId, userId, {
-        date: "",
-      });
+      const res: any = await getTasksList(teamId, userId);
       if (res?.data?.code === 200) {
         this.planList.push(...(res?.data?.data || []));
         this.showType = this.planList?.length > 0 ? 1 : 2;
@@ -110,7 +116,7 @@ export default defineComponent({
       console.info('当前队伍id', this.curTeam.id);
       // location.href = "#/plan/create";
       this.toPlanCreate(this.curTeam.id)
-    }
+    },
   },
   setup() {
     let planList: Ref<Array<Plan>> = ref([] as Array<Plan>);
@@ -129,7 +135,15 @@ export default defineComponent({
     const isStarted = ref(false);
     const pastDays = ref(0);
     const currentRate = ref(0);
-
+      const toDetail = (plan) => {
+      console.log(isStarted.value)
+      router.push({
+        path: `/plan/detail/${plan.id}`,
+        query: {
+          disableEdit: isStarted.value + ''
+        }
+      })
+    }
     return {
       currentRate,
       pastDays,
@@ -138,18 +152,26 @@ export default defineComponent({
       curTeam,
       colors,
       toPlanCreate,
-      showType
+      showType,
+      toDetail
       // createPlan,
     };
   },
 });
 </script>
 <style lang="scss" scoped>
+.create-arrow {
+  position: absolute;
+  right: 16px;
+  top: 23px;
+  opacity: 0.8;
+}
 .plan-list {
   padding: 16px 16px 0;
   min-height: 100%;
   overflow-y: scroll;
   box-sizing: border-box;
+
 
   h1 {
     /** 文本1 */
@@ -196,7 +218,7 @@ export default defineComponent({
       background-color: rgba(255, 170, 0, 1);
       // box-shadow: 2px 8px 20px 0px rgba(222, 148, 0, 0.4);
       border-radius: 8px;
-
+      position: relative;
       h3 {
         font-size: 14px;
         margin-bottom: 8px;

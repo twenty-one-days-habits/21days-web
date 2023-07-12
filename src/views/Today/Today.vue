@@ -31,12 +31,12 @@
       <ul>
         <li v-for="(item, index) in otherPlans" :key="item.id" >
           <van-checkbox
-            :disabled="item.checkin"
+            :disabled="item.checkin_count>=item.counts"
             v-model="item.checkin"
             shape="square"
             label-disabled
             @change="handleClick($event, index, 'other')">
-            {{item.title}}（{{`${item.check_in_type === 3 ? '完成' : ''}${item.counts}/ ${+item.check_in_type === 2 ? '每周' : (item.check_in_type === 3 ? '总' : '')}${item.counts}次`}}）
+            {{item.title}}（{{`${item.check_in_type === 3 ? '完成' : ''}${item.checkin_count||0}次/ ${+item.check_in_type === 2 ? '每周' : (item.check_in_type === 3 ? '总' : '')}${item.counts}次`}}）
           </van-checkbox>
         </li>
       </ul>
@@ -85,6 +85,7 @@ export default defineComponent({
     const res1 = await getMyTeams();
     console.info(res1);
     await this.getTeamId();
+    console.log(this.curTeamId, 'kdkdkdkd');
     if(this.curTeamId) {  
       await this.getTasks(this.curTeamId)
     } else {
@@ -127,20 +128,9 @@ export default defineComponent({
       },
       async getTeamId() {
         const res = await getMyTeams();
-        console.info(res);
         // 优先获取当前团队的id 没有的话 再获取未开始的团队计划的id
-        if(!res?.data?.data?.current_team?.length) {
-            const noStart = res.data.data.teams.find(item => {
-                return new Date(item.start).getTime() > new Date().getTime()
-            })
-            // 有未开始的团队计划
-            if (noStart?.id) {
-              this.curTeamId  = noStart.id;
-            }
-        } else {
-          this.curTeamId  = res.data.data.current_team[0].id;
-        }
-    
+       
+        this.curTeamId  = res.data.data.current_team?.[0]?.id || '';
       },
     async getTasks (teamId:string, date: Date = new Date()) {
       const userId = localStorage.userId;

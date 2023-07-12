@@ -10,6 +10,10 @@ const routes = [{
     name: 'PlanCreate',
     path: '/plan/create/:teamId',
     component: ()=>import("../views/Plan/Create.vue")
+  }, {
+    name: 'PlanDetail',
+    path: '/plan/detail/:taskId',
+    component: ()=>import("../views/Plan/Create.vue")
   }]
 }]
 export default routes;

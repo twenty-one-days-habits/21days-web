@@ -55,13 +55,34 @@ export function createTask(data: Plan) {
   })
 }
 
+// 修改任务
+export function editTask(data: Plan) {
+  return request({
+    url: `/tasks/${data.id}`,
+    method: "put",
+    data
+  })
+}
+
 export function getTasksByDate(teamId:string, userId:string, date: string) {
-  console.info('date', date);
   return request({
     url: `/tasks/${teamId}/${userId}`,
     method: "get",
     params: {
       date
     }
+  })
+}
+
+
+export function getTasksList(teamId:string, userId:string) {
+  return request({
+    url: `/tasks/plan/${teamId}/${userId}`,
+  })
+}
+
+export function getDetail(taskId:string) {
+  return request({
+    url: `/tasks/${taskId}`,
   })
 }

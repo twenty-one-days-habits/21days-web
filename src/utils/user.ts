@@ -22,3 +22,21 @@ export function logout () {
         method: "post",
     })
 }
+
+export function reset(email:string){
+    return request({
+        url: 'users/forget-password',
+        method: "post",
+        data: {
+            email
+        } 
+    })
+}
+
+export function verify(data:any) {
+    return request({
+        url: 'users/reset-password',
+        method: "post",
+        data
+    })
+}

@@ -66,7 +66,7 @@ const init = async () => {
         currentPlan.value = { 
             ...data.current_team[0],
             isLeader: data.current_team[0].leader_info.id === localStorage.getItem('userId'),
-            members: data.current_team[0].members.map(member => member.user_info.username).join('、'),
+            members: data.current_team[0].members.slice(0,2).map(member => member.user_info.username).join('、'),
             isStart: true
         };
     } else {
@@ -78,7 +78,7 @@ const init = async () => {
             currentPlan.value = {
                 ...noStart,
                 isLeader,
-                members: noStart.members.map(member => member.user_info.username).join('、'),
+                members: noStart.members.slice(0,2).map(member => member.user_info.username).join('、'),
                 isStart: false,
             }
             if (isLeader) {

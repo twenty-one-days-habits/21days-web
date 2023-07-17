@@ -62,7 +62,7 @@ const currentPlan = ref(null);
 let applyingCount = ref(0);
 const init = async () => {
     const { data: { data } } = await teamList();
-    if (data.current_team.length) {
+    if (data.current_team?.length) {
         currentPlan.value = { 
             ...data.current_team[0],
             isLeader: data.current_team[0].leader_info.id === localStorage.getItem('userId'),

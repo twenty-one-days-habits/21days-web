@@ -117,7 +117,7 @@
           v-model="score"
           rows="1"
           autosize
-          label="分值"
+          label="每次打卡分值"
           label-align="top"
           :disabled="disableEdit"
           type="text"

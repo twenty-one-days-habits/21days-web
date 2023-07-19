@@ -21,6 +21,7 @@ declare module '@vue/runtime-core' {
     VanCalendar: typeof import('vant/es')['Calendar']
     VanCellGroup: typeof import('vant/es')['CellGroup']
     VanCheckbox: typeof import('vant/es')['Checkbox']
+    VanCheckboxGroup: typeof import('vant/es')['CheckboxGroup']
     VanCircle: typeof import('vant/es')['Circle']
     VanField: typeof import('vant/es')['Field']
     VanForm: typeof import('vant/es')['Form']

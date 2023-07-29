@@ -357,7 +357,7 @@ export default defineComponent({
     font-weight: bold;
     line-height: 38px;
     font-size: 16px;
-    padding: 20px 10px 10px;
+    padding: 10px;
   }
   &-day {
     display: flex;

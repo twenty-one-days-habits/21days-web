@@ -56,7 +56,7 @@
     </div>
 
     <div class="plan-today-list" v-if="showType === 1">
-      <h3>当日任务 {{today}}</h3>
+      <h3>当日任务 </h3>
       <ul>
         <li v-for="(item, index) in todayPlans" :key="item.time">
           <van-checkbox 

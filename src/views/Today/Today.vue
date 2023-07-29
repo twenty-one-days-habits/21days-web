@@ -69,8 +69,7 @@
           </van-checkbox>
         </li>
       </ul>
-      <hr/>
-      <h3>周期任务</h3>
+      <h3 style="padding-top:15px;border-top:1px solid #eee">周期任务</h3>
       <ul>
         <li v-for="(item, index) in otherPlans" :key="item.id" >
           <van-checkbox
@@ -358,6 +357,7 @@ export default defineComponent({
     font-weight: bold;
     line-height: 38px;
     font-size: 16px;
+    padding: 20px 10px 10px;
   }
   &-day {
     display: flex;
@@ -381,10 +381,6 @@ export default defineComponent({
   padding-top: 30px;
   h3 {
     font-size: 18px;
-  }
-  hr {
-    border-color: rgba(0, 0, 0, 0.06);
-    margin: 15px 0;
   }
   ul {
     padding: 16px 0 0;

@@ -1,7 +1,8 @@
 <template>
   <div class='plan-today'>
-    <div class="plan-today-calendar">
-      <van-calendar
+    <van-loading size="24px" type="spinner" v-if="loading">加载中...</van-loading>
+    <div class="plan-today-calendar" v-if="initalIndex !== -1">
+      <!-- <van-calendar
         :value="curDate"
         :poppable="false"
         :min-date="new Date(2023,1,1)"
@@ -10,14 +11,56 @@
         row-height="40px"
         :style="{ height: '240px' }"
         @confirm="selectDate"
-      />
+      /> -->
+      <div class="plan-today-title">
+        {{nowMonth}}
+      </div>
+      <div class="plan-today-day">
+        <span>日</span>
+        <span>一</span>
+        <span>二</span>
+        <span>三</span>
+        <span>四</span>
+        <span>五</span>
+        <span>六</span>
+      </div>
+      <swiper
+        ref="swiper"
+        :modules="modules"
+        :loop="false"
+        :slides-per-view="7"
+        :slides-per-group="7"
+        :space-between="0"
+        :initial-slide="initalIndex"
+        :navigation="{
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        }"
+        class="swiperBox"
+        @slideChange="onSlideChange"
+      >
+        <swiper-slide v-for="(item) in dateInfoList" :key="item.value">
+          <span @click="selectDay(item)" :class="{'disabled':item.disabled,'active': item.active}">
+            {{item.showValue}}
+          </span>
+        </swiper-slide>
+        
+       
+        <!--右箭头。如果放置在swiper外面，需要自定义样式。-->
+        <!-- 如果需要滚动条 -->
+        <!-- <div class="swiper-scrollbar"></div> -->
+      </swiper>
+      <!--<div class="swiper-button-prev" />-->
+        <!--左箭头。如果放置在swiper外面，需要自定义样式。-->
+      <!--<div class="swiper-button-next"/>-->
     </div>
+
     <div class="plan-today-list" v-if="showType === 1">
-      <h3>当日任务</h3>
+      <h3>当日任务 {{today}}</h3>
       <ul>
         <li v-for="(item, index) in todayPlans" :key="item.time">
           <van-checkbox 
-            :disabled="item.checkin"
+            :disabled="item.checkin||today !== nowMonth"
             v-model="item.checkin"
             shape="square"
             label-disabled
@@ -31,7 +74,7 @@
       <ul>
         <li v-for="(item, index) in otherPlans" :key="item.id" >
           <van-checkbox
-            :disabled="item.checkin_count>=item.counts"
+            :disabled="item.checkin_count>=item.counts||today !== nowMonth"
             v-model="item.checkin"
             shape="square"
             label-disabled
@@ -52,10 +95,19 @@
 <script lang='ts'>
 import { Ref, defineComponent, ref } from "vue";
 import { getTasksByDate, getMyTeams, checkIn } from '../../utils/plan';
-import { reactive } from "vue";
 import { showToast } from "vant";
-import { Team, Plan } from '../../interface/plan';
+import { Plan } from '../../interface/plan';
 import Empty from '../../components/Empty.vue';
+// 引入swiper样式（按需导入）
+// import 'swiper/css/pagination' // 轮播图底面的小圆点
+import 'swiper/css/navigation' // 轮播图两边的左右箭头
+// import 'swiper/css/scrollbar'  // 轮播图的滚动条， 轮播图里一般不怎么会使用到滚动条，如果有用到的话import导入就行
+// 引入swiper核心和所需模块
+import {   Navigation } from 'swiper'
+ 
+
+// 在modules加入要使用的模块
+const modules = [ Navigation]
 
 interface planItem {
   name: string;
@@ -77,15 +129,20 @@ interface DateMap {
   's+': number
 }
 
+interface dateInfo {
+  date: string,
+  value: string,
+  showValue: string,
+  selected: Boolean
+}
+
 export default defineComponent({
   components: {
     Empty
   },
   async mounted() {
     const res1 = await getMyTeams();
-    console.info(res1);
     await this.getTeamId();
-    console.log(this.curTeamId, 'kdkdkdkd');
     if(this.curTeamId) {  
       await this.getTasks(this.curTeamId)
     } else {
@@ -100,9 +157,46 @@ export default defineComponent({
     todayPlans() {
       if(!this.allPlans) return [];
       return this.allPlans.filter(v => +v.check_in_type < 3);
+    },
+    nowMonth() {
+      return this.dateInfoList.find(v => v.active)?.value;
+    },
+  },
+  data() {
+    return {
+      loading: true,
+      dateInfoList: [],
+      today: this.dateFormate(new Date().getTime(), 'yyyy-MM-dd'),
     }
   },
   methods: {
+    selectDay(item) {
+      if (item.disabled) return;
+      if (this.isFirst) {
+        this.isFirst = false;
+        return;
+      }
+      this.dateInfoList.forEach(v => {
+        v.active = false;
+      })
+      item.active = true;
+      this.getTasks(this.curTeamId, new Date(item.value));
+    },
+    prevEl (item, index) {
+      console.log(item, index,'pre');
+    },
+    onSlideChange({activeIndex}) {
+      console.log(activeIndex,this.initalIndex)
+      if (this.dateInfoList[activeIndex].disabled) {
+        const item = this.dateInfoList.slice(activeIndex).find(v => !v.disabled);
+        this.selectDay(item);
+        return;
+      }
+      this.selectDay(this.dateInfoList[activeIndex]);
+    },
+    nextEl(item,index) {
+      console.log(item, index,'next');
+    },
     dateFormate (timestamp: number, format = 'yyyy-MM-dd hh:mm:ss') {
         let date = new Date(timestamp);
         const o: any = {
@@ -125,20 +219,41 @@ export default defineComponent({
           }
         }
         return format;
-      },
-      async getTeamId() {
-        const res = await getMyTeams();
-        // 优先获取当前团队的id 没有的话 再获取未开始的团队计划的id
-       
-        this.curTeamId  = res.data.data.current_team?.[0]?.id || '';
-      },
+    },
+    async getTeamId() {
+      const res = await getMyTeams();
+      // 优先获取当前团队的id 没有的话 再获取未开始的团队计划的id
+      const currentTeam = res.data.data.current_team?.[0]
+      if (currentTeam) {
+        const startDay = new Date(currentTeam.start).getDay();
+        let count = -startDay
+        const startTime = new Date(currentTeam.start).getTime();
+        while (count < 21 + (7-startDay)) {
+          const timeItem = this.dateFormate(startTime + count * 60 * 60 * 24 *1000, 'yyyy-MM-dd');
+          this.dateInfoList.push({ 
+            value: timeItem,
+            showValue: timeItem.split('-')[2],
+            disabled: count <0 || count >= 21,
+            active: timeItem === this.dateFormate(new Date().getTime(), 'yyyy-MM-dd')
+          })
+          if (timeItem === this.dateFormate(new Date().getTime(), 'yyyy-MM-dd')) {
+            this.initalIndex = count;
+          }
+          // console.log(timeItem, this.dateFormate(new Date().getTime(), 'yyyy-MM-dd'), count, this.initalIndex)
+          count++
+        }
+        // this.dateInfoList.push(...arr);
+      }
+      this.curTeamId  = res.data.data.current_team?.[0]?.id || '';
+    },
     async getTasks (teamId:string, date: Date = new Date()) {
+      // this.loading = true;
       const userId = localStorage.userId;
       this.allPlans.length = 0;
       // 清空数组
       this.allPlans = []
       const { data } = await getTasksByDate(teamId, userId, this.dateFormate(date?.getTime(), 'yyyy-MM-dd'));
-      console.info(data);
+      this.loading = false;
       if(data?.code === 200) {
         this.allPlans.push(...data.data);
         this.showType = this.allPlans?.length > 0 ? 1 : 2;
@@ -174,23 +289,89 @@ export default defineComponent({
     let curTeamId = ref('');
     let curDate = ref(new Date());
     let showType = ref(0);
-
+    let initalIndex = ref(-1);
+    const dateInfoList:Ref<Array<dateInfo>> = ref([] as Array<dateInfo>);
+    const isFirst = ref(true);
     return {
       curDate,
       allPlans,
       curTeamId,
-      showType
+      showType,
+      modules,
+      dateInfoList,
+      initalIndex,
+      isFirst,
+      // navigation
     }
   }
 })
 
 </script>
 <style lang='scss'>
+.swiperBox{
+  width: calc(100% - 20px);
+  margin: 0 auto 20px;
+  font-size: 14px;
+}
+.swiper-button-next,
+.swiper-button-prev {
+  position: absolute;
+  margin-top: 12px;
+}
+.swiper-button-next:after, .swiper-button-prev:after {
+  font-size: 16px;
+  color: #333;
+}
+.swiper-slide {
+  text-align: center;
+  span {
+    display: block;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    margin: 0 auto;
+    font-size: 14px;
+    border-radius: 2px;
+    &.disabled {
+      color: #bbb;
+    }
+    &.active {
+      background-color: $blue;
+      border-radius: 2px;
+      color: #fff;
+    }
+  }
+}
+
+.swiper-button-prev {
+  margin-left: -5px;
+}
+.swiper-button-next:after {
+  margin-left: 5px;
+}
 .plan-today {
   height: calc(100vh - 80px);
   overflow: scroll;
-
+  &-title {
+    text-align: center;
+    height: 38px;
+    font-weight: bold;
+    line-height: 38px;
+    font-size: 16px;
+  }
+  &-day {
+    display: flex;
+    width: calc(100% - 20px);
+    margin: 0 auto 10px;
+    font-size: 14px;
+    span {
+      display: block;
+      flex: 1;
+      text-align: center;
+    }
+  }
   &-calendar {
+    position: relative;
     // border-bottom: 1px solid #eee;
   }
 }
@@ -222,5 +403,13 @@ export default defineComponent({
     color: rgba(0,0,0,.25);
   }
 }
-
+.van-checkbox__label {
+  font-size: 14px;
+  font-weight: normal;
+}
+.van-checkbox__icon .van-icon{
+  font-size: 0.6em;
+  position: relative;
+  top: 2px;
+}
 </style>

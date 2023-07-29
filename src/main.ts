@@ -2,9 +2,11 @@ import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
 import router from './router/index'
+import VueAwesomeSwiper from 'vue-awesome-swiper';
+import 'swiper/css';
 
 const app = createApp(App);
-app.use(router).mount('#app');
+app.use(VueAwesomeSwiper).use(router).mount('#app');
 app.config.globalProperties.$filters = {
     dateFormat: (value = Date.now(), fmt = 'yyyy-MM-dd') => {
         let target = new Date(value)

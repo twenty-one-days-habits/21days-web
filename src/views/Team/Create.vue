@@ -80,15 +80,18 @@ const toSet = async () => {
 .team-create {
     padding: 20px;
     &-label {
-        font-size: 18px;
+        font-size: 15px;
         margin-top: 20px;
     }
+    &-item {
+        border-bottom: 1px solid #eee;
+    }
     &-input {
-        font-size: 20px;
+        font-size: 15px;
         border: none;
         display: block;
         width: calc(100% - 25px);
-        height: 40px;
+        height: 30px;
         margin-top: 10px;
         &:disabled {
             background: transparent;

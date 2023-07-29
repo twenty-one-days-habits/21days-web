@@ -198,6 +198,14 @@ const selectDay = (item: number) => {
 }
 
 const onSubmit = async (values: any) => {
+  if (!values.title) {
+    showToast("请输入任务标题");
+    return;
+  }
+  if (!values.score) {
+    showToast("请输入每次打卡分值");
+    return;
+  }
   if(disableEdit.value) {
     location.replace('#/plan/list')
     return
@@ -306,7 +314,7 @@ const onSubmit = async (values: any) => {
     padding: 0 4px;
   }
   .btn-wrapper {
-    margin-top: 100px;
+    margin-top: 40px;
     padding: 0 16px;
     box-sizing: border-box;
   }

@@ -1,5 +1,6 @@
 <template>
   <div class="plan-list">
+    <van-loading size="24px" type="spinner" v-if="loading">加载中...</van-loading>
     <h1 v-if="curTeam.name">{{ curTeam.name }}</h1>
     <div class="plan-detail" v-if="curTeam.name">
       <!-- <chart class="plan-detail_chart" v-if="isStarted"/> -->
@@ -66,9 +67,14 @@ export default defineComponent({
       return this.currentRate.toFixed(2) + "%";
     },
   },
+  data() {
+    return {
+      loading: false
+    };
+  },
   async mounted() {
+    this.loading = true
     const res1 = await getMyTeams();
-    console.log(res1)
     // 优先获取当前团队的id 没有的话 再获取未开始的团队计划的id
     if(!res1?.data?.data?.current_team?.length) {
       const noStart = res1.data.data.teams.find(item => {
@@ -83,10 +89,9 @@ export default defineComponent({
           return
         }
     } else {
-      console.log('kdkdkddk');
       this.curTeam  = res1.data.data.current_team?.[0] as Team;
     }
-    
+    this.loading = false
     const startTime = new Date(this.curTeam.start);
     console.log(startTime, this.curTeam.start);
     this.pastDays = Math.floor(
@@ -272,7 +277,7 @@ export default defineComponent({
     button {
       color: #fff;
       width: 144px;
-      height: 57px;
+      height: 50px;
       opacity: 1;
       font-size: 18px;
       border-radius: 8px;

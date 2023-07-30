@@ -227,6 +227,7 @@ export default defineComponent({
         const startDay = new Date(currentTeam.start).getDay();
         let count = -startDay
         const startTime = new Date(currentTeam.start).getTime();
+        let index = 0;
         while (count < 21 + (7-startDay)) {
           const timeItem = this.dateFormate(startTime + count * 60 * 60 * 24 *1000, 'yyyy-MM-dd');
           this.dateInfoList.push({ 
@@ -236,8 +237,9 @@ export default defineComponent({
             active: timeItem === this.dateFormate(new Date().getTime(), 'yyyy-MM-dd')
           })
           if (timeItem === this.dateFormate(new Date().getTime(), 'yyyy-MM-dd')) {
-            this.initalIndex = count;
+            this.initalIndex = index;
           }
+          index++;
           // console.log(timeItem, this.dateFormate(new Date().getTime(), 'yyyy-MM-dd'), count, this.initalIndex)
           count++
         }

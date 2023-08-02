@@ -4,5 +4,13 @@
         "src": "/api/(.*)",
         "dest": "http://23.106.140.233:8088/$1"
       }
+    ],
+    "headers": [
+      {
+        "source": "/(.*)",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-store" }
+        ]
+      }
     ]
   }

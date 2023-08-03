@@ -38,7 +38,7 @@ const getWidth = ({checkin_count, total_count}) => {
             <p class="team-result-desc">成员名称</p>
             <p class="team-result-name">{{item.user.username}}</p>
             <div class="team-result-seq">第{{index+1}}名</div>
-            <img class="team-result-first" v-if="index===0" src="@/assets/tiny.png">
+            <img class="team-result-first" v-if="index===0" src="/assets/tiny.png">
             <div v-if="item.statistic.length">
                 <div class="team-result-every" v-for="(plan,index1) in item.statistic" :key="index1">
                     <img class="team-result-icon" :src="'/assets/icon'+(index1%3)+'.png'">

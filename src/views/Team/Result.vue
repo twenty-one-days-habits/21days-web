@@ -10,11 +10,20 @@ const name = decodeURIComponent(route.query.name)
 let list = ref([])
 const getList = async () => { 
     let { data: { data } } = await getTeamStatics(teamId); 
-    list.value = data;
-    // applyingList.value = data;
-    // let { data: { data: newData } } = await teamUsers(teamId, {is_allowed: true}); 
-    // applyedList.value = newData;
-    // console.log(applyingList.value, applyedList.value)
+    list.value = data.map((item) => {
+        let all = 0;
+        let count = 0;
+        item.statistic.forEach((plan) => {
+            all += (plan.total_count) * plan.task.score;
+            count += plan.checkin_count * plan.task.score;
+        });
+        item.all = all;
+        item.count = count;
+        item.percent = Math.floor(count / all * 100);
+        return item;
+    }).sort((item1, item2) => {
+       return item2.percent - item1.percent;
+    });
 }
 getList()
 const getWidth = ({checkin_count, total_count}) => {
@@ -28,6 +37,8 @@ const getWidth = ({checkin_count, total_count}) => {
         <div class="team-result-item" v-for="(item,index) in list" :key="index">
             <p class="team-result-desc">成员名称</p>
             <p class="team-result-name">{{item.user.username}}</p>
+            <div class="team-result-seq">第{{index+1}}名</div>
+            <img class="team-result-first" v-if="index===0" src="@/assets/tiny.png">
             <div v-if="item.statistic.length">
                 <div class="team-result-every" v-for="(plan,index1) in item.statistic" :key="index1">
                     <img class="team-result-icon" :src="'/assets/icon'+(index1%3)+'.png'">
@@ -40,6 +51,9 @@ const getWidth = ({checkin_count, total_count}) => {
                             <span class="plan-right">{{plan.checkin_count}}/<em>{{plan.total_count}}</em></span>
                         </div>
                     </div>
+                </div>
+                <div class="team-result-statistic">
+                    已完成:{{item.count}}分 总分数:{{item.all}}分  完成率:<i>{{item.percent}}%</i>
                 </div>
             </div>
             <div v-else class="team-result-empty">
@@ -73,6 +87,8 @@ const getWidth = ({checkin_count, total_count}) => {
         margin-top: 10px;
         border-bottom: 1px solid #E4E6E8;
         padding-bottom: 10px;
+        color: #666;
+        font-size: 14px;
     }
     &-detail {
         margin-left: 30px;
@@ -84,6 +100,7 @@ const getWidth = ({checkin_count, total_count}) => {
     }
     &-icon {
         width: 40px;
+        height: 40px;
         display: block;
     }
     &-back {
@@ -100,6 +117,29 @@ const getWidth = ({checkin_count, total_count}) => {
     }
     &-empty {
         margin-top: 10px;
+    }
+    &-statistic {
+        border-top: 1px solid #E4E6E8;
+        text-align: right;
+        margin-top: 25px;
+        padding-top: 20px;
+        padding-bottom: 10px;
+        font-size: 14px;
+        color: #666;
+        i {
+            font-size: 17px;
+        }
+    }
+    &-seq {
+        float: right;
+        font-size: 20px;
+        margin-top: -40px;
+    }
+    &-first {
+        width: 30px;
+        float: right;
+        margin-top: -40px;
+        margin-right: 60px;
     }
     .plan-right {
         float: right;

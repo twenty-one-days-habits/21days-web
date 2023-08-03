@@ -33,7 +33,9 @@ export default defineComponent({
         const password = ref('');
         const secondPassword = ref('');
         const router = useRouter();
-         const login = () => {
+        let isClick = false
+
+        const login = () => {
             router.push({
                 path: '/user/login'
             })
@@ -47,11 +49,18 @@ export default defineComponent({
                 showToast('两次密码不一致')
                 return
             }
+            if (isClick) {
+                return
+            }
+            isClick = true
             const res = await postRegister({
                 username: username.value,
                 password: password.value,
                 email: email.value
             })
+            setTimeout(() => {
+                isClick = false
+            }, 1000)
             if (res.status === 200) {
                 showToast('注册成功，请登录');
                 login();

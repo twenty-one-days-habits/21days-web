@@ -38,7 +38,6 @@ export default defineComponent({
         const userName = ref('');
         const password = ref('');
         const router = useRouter()
-        const route = useRoute();
 
         const toRegister = () => {
             router.push({

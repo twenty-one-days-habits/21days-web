@@ -16,7 +16,7 @@
                 </div>
                 <div class="team-current-right" v-if="currentPlan.isLeader&&!currentPlan.isStart">
                     <!-- <i class="team-current-refresh"></i> -->
-                    <i class="team-current-copy" id="copyBtn" ref="copyBtn" :data-clipboard-text="currentPlan.id+':'+currentPlan.invitation_code">复制邀请码</i>
+                    <i class="team-current-copy" id="copyBtn" ref="copyBtn" :data-clipboard-text="'您的邀请码为：'+currentPlan.id+':'+currentPlan.invitation_code">复制邀请码</i>
                 </div>
             </div>
             <div class="team-current-bottom">

@@ -15,11 +15,11 @@
         />
       </van-cell-group>
       <van-cell-group>
-        <van-field  :disabled="disableEdit||taskId"  name="checkInType" label="打卡频次">
+        <van-field  :disabled="disableEdit || !!taskId"  name="checkInType" label="打卡频次">
           <template #input>
             <van-radio-group
               v-model="checkInType"
-              :disabled="disableEdit||taskId"
+              :disabled="disableEdit || !!taskId"
               direction="horizontal">
               <van-radio name="1">日</van-radio>
               <van-radio name="2">周</van-radio>
@@ -29,14 +29,14 @@
         </van-field>
       </van-cell-group>
       <van-cell-group v-if="checkInType === '1'">
-        <van-field :disabled="disableEdit||taskId" name="everyday" label="每天">
+        <van-field :disabled="disableEdit || !!taskId" name="everyday" label="每天">
           <template #input>
-            <van-switch :disabled="disableEdit||taskId"  v-model="everyday" />
+            <van-switch :disabled="disableEdit || !!taskId"  v-model="everyday" />
           </template>
         </van-field>
       </van-cell-group>
       <van-cell-group v-if="checkInType === '1' && !everyday">
-        <van-field  :disabled="disableEdit||taskId" label-align="top" label="选择需要打卡的天数">
+        <van-field  :disabled="disableEdit || !!taskId" label-align="top" label="选择需要打卡的天数">
           <template #input>
             <div class="days">
               <span
@@ -55,9 +55,9 @@
         </van-field>
       </van-cell-group>
       <van-cell-group v-if="checkInType === '2'">
-        <van-field :disabled="disableEdit||taskId" name="signTypeOfWeek" label="打卡方式">
+        <van-field :disabled="disableEdit || !!taskId" name="signTypeOfWeek" label="打卡方式">
           <template #input>
-            <van-radio-group v-model="signTypeOfWeek"  :disabled="disableEdit||taskId" direction="horizontal">
+            <van-radio-group v-model="signTypeOfWeek"  :disabled="disableEdit || !!taskId" direction="horizontal">
               <van-radio name="1">按天</van-radio>
               <van-radio name="2">按次数</van-radio>
             </van-radio-group>
@@ -68,7 +68,7 @@
         <van-field
           v-if="signTypeOfWeek === '1'"
           label-align="top"
-          :disabled="disableEdit||taskId"
+          :disabled="disableEdit || !!taskId"
           label="选择需要打卡的天数"
         >
           <template #input>
@@ -90,7 +90,7 @@
           label="打卡次数"
           input-align="left"
           name="counts"
-          :disabled="disableEdit||taskId"
+          :disabled="disableEdit || !!taskId"
           v-model="counts"
           type="digit"
           placeholder="请输入打卡频次"
@@ -104,7 +104,7 @@
           input-align="left"
           name="counts"
           v-model="counts"
-          :disabled="disableEdit||taskId"
+          :disabled="disableEdit || !!taskId"
           type="digit"
           placeholder="请输入打卡频次"
         >
@@ -156,7 +156,7 @@ import router from "../../router";
 // import { SwitchItem } from "../../components/interface";
 const route = useRoute()
 let teamId = route.params.teamId;
-let taskId = ref(route.params.taskId)
+let taskId = ref(route.params.taskId as string)
 
 
 let disableEdit = ref(route.query.disableEdit === 'true')
@@ -177,9 +177,17 @@ if (taskId.value) {
     everyday.value = +data.everyday === 1
     description.value = data.description
     counts.value = data.counts
+    // 按次数
+    if(data.counts > 0) {
+      signTypeOfWeek.value = '2'
+    }
     checkInType.value =data.check_in_type + ''
     score.value = data.score
-    selected.push(...data.days.split('|').map(item => +item));
+    selected.push(...data.days.split('|').map((item: string) => +item));
+    // 按天
+    if(data.days?.length) {
+      signTypeOfWeek.value = '1'
+    }
     console.log(selected);
   })
 }

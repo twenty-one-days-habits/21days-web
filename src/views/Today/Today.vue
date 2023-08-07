@@ -26,7 +26,6 @@
       </div>
       <swiper
         ref="swiper"
-        :modules="modules"
         :loop="false"
         :slides-per-view="7"
         :slides-per-group="7"
@@ -102,11 +101,11 @@ import Empty from '../../components/Empty.vue';
 import 'swiper/css/navigation' // 轮播图两边的左右箭头
 // import 'swiper/css/scrollbar'  // 轮播图的滚动条， 轮播图里一般不怎么会使用到滚动条，如果有用到的话import导入就行
 // 引入swiper核心和所需模块
-import {   Navigation } from 'swiper'
+// import {   Navigation } from 'swiper'
  
 
 // 在modules加入要使用的模块
-const modules = [ Navigation]
+const modules = []
 
 interface planItem {
   name: string;
@@ -298,7 +297,6 @@ export default defineComponent({
       allPlans,
       curTeamId,
       showType,
-      modules,
       dateInfoList,
       initalIndex,
       isFirst,

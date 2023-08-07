@@ -90,12 +90,13 @@
           label="打卡次数"
           input-align="left"
           name="counts"
-          :disabled="disableEdit || !!taskId"
           v-model="counts"
           type="digit"
-          placeholder="请输入打卡频次"
+          placeholder="请输入每周的打卡次数"
+          :disabled="disableEdit || !!taskId"
         >
-          <template #input>&nbsp;<input class="" type="digit" v-model="counts"/>次&nbsp;/&nbsp;周 </template>
+          <template #input>&nbsp;
+            <input class="" type="digit" :disabled="disableEdit || !!taskId" v-model="counts"/>次&nbsp;/&nbsp;周 </template>
         </van-field>
       </van-cell-group>
       <van-cell-group v-if="checkInType === '3'">

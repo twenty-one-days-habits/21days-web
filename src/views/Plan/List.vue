@@ -277,7 +277,7 @@ export default defineComponent({
     button {
       color: #fff;
       width: 144px;
-      height: 50px;
+      height: 5px;
       opacity: 1;
       font-size: 18px;
       border-radius: 8px;

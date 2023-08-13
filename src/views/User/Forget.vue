@@ -28,7 +28,6 @@ export default defineComponent({
     },
     setup() {
         const email = ref('');
-
         const send = async () => {
             if (!email.value) {
                 showToast('请填写邮箱');

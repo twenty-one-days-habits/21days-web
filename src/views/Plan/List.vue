@@ -91,7 +91,7 @@ export default defineComponent({
     } else {
       this.curTeam  = res1.data.data.current_team?.[0] as Team;
     }
-    this.loading = false
+    this.loading = false;
     const startTime = new Date(this.curTeam.start);
     console.log(startTime, this.curTeam.start);
     this.pastDays = Math.floor(
@@ -277,7 +277,7 @@ export default defineComponent({
     button {
       color: #fff;
       width: 144px;
-      height: 5px;
+      height: 50px;
       opacity: 1;
       font-size: 18px;
       border-radius: 8px;

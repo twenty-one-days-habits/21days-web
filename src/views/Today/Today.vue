@@ -145,6 +145,7 @@ export default defineComponent({
       await this.getTasks(this.curTeamId)
     } else {
       this.showType = 2
+      this.loading = false;
     }
   },
   computed: {

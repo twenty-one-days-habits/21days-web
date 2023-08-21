@@ -33,7 +33,7 @@
     <div class="empty" v-if="showType === 2">
       <!-- <img src="../../assets/empty.png" alt="" />
       <p>你还没有创建任务哦，抓紧时间创建吧！</p> -->
-      <Empty :text="curTeam.id ? '你还没有创建任务哦，抓紧时间创建吧！' : '你还没有加入任何团队，<br/>点击我的团队去加入或者创建团队吧！'" />
+      <Empty :text="curTeam.id ? '你还没有创建任务哦，请在任务开始时间之前完成创建！' : '你还没有加入任何团队，<br/>点击我的团队去加入或者创建团队吧！'" />
       <button v-if="curTeam.id" @click="createPlan">创建任务 +</button>
     </div>
   </div>
@@ -80,12 +80,12 @@ export default defineComponent({
       const noStart = res1.data.data.teams.find(item => {
         return new Date(item.start).getTime() > new Date().getTime()
         })
-          console.log(noStart)
         // 有未开始的团队计划
         if (noStart) {
           this.curTeam  = noStart;
         } else {
           this.showType = 2
+          this.loading = false
           return
         }
     } else {

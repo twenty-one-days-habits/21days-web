@@ -3,8 +3,11 @@
     <div v-else class="team-list">
         <textarea id="myInput" style="width:0;height:0;opacity: 0;"></textarea>
         <h2 class="team-title" v-if="currentPlan">
-                {{ currentPlan.isStart ? '正在执行中的计划' : '未开始的团队计划' }}
+            {{ currentPlan.isStart ? '正在执行中的计划' : '未开始的团队计划' }}
         </h2>
+        <p class="create-tip" v-if="currentPlan&&!currentPlan.isStart">
+            请在计划开始{{$filters.dateFormat(currentPlan.start)}}前，在计划列表页面完成计划的创建，计划开始后，不允许创建计划
+        </p>
         <div class="team-current" v-if="currentPlan">
             <div class="team-current-top">
                 <div class="team-current-left">
@@ -128,6 +131,11 @@ init();
 </script>
 
 <style lang="scss">
+.create-tip {
+    color: red;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
 .team-list {
     padding-top: 15px;
     width: 335px;

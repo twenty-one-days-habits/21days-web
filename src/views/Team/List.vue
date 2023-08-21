@@ -138,7 +138,9 @@ init();
 }
 .team-list {
     padding-top: 15px;
-    width: 335px;
+    padding-left: 30px;
+    padding-right: 30px;
+    box-sizing: border-box;
     margin: 0 auto;
 }
 .team-title {

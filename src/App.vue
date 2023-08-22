@@ -2,7 +2,7 @@
 import tab from './components/Tab.vue'
 import 'vant/es/toast/style';
 window.onresize = () => {
- document.getElementById('app')!.style!.height = window.innerHeight + 'px';
+ document.getElementById('app')!.style!.height = document.documentElement.clientHeight + 'px';
  setFontSize();     
 }
 const setFontSize = () => {

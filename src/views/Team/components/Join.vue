@@ -3,8 +3,13 @@
     import { joinTeam } from 'utils/team'
     import { defineEmits, ref } from 'vue';
     import { showToast } from 'vant';
+    import { useRoute } from 'vue-router';
+    const route = useRoute()
     const emit = defineEmits(['close']);
     const code = ref('');
+    if (route.query.inviteCode) {
+        code.value = route.query.inviteCode;
+    }
     const close = () => {
         emit('close')
     }

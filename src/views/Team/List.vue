@@ -19,7 +19,7 @@
                 </div>
                 <div class="team-current-right" v-if="currentPlan.isLeader&&!currentPlan.isStart">
                     <!-- <i class="team-current-refresh"></i> -->
-                    <i class="team-current-copy" id="copyBtn" ref="copyBtn" :data-clipboard-text="'您的邀请码为：'+currentPlan.id+':'+currentPlan.invitation_code">复制邀请码</i>
+                    <i class="team-current-copy" id="copyBtn" ref="copyBtn" :data-clipboard-text="getInviteList()">复制邀请链接</i>
                 </div>
             </div>
             <div class="team-current-bottom">
@@ -52,17 +52,23 @@
 import { teamList } from '@/utils/team'
 import Empty from './components/Empty.vue'
 import { ref } from 'vue';
-import { useRouter} from 'vue-router'
+import { useRouter, useRoute} from 'vue-router'
 import { teamUsers } from '@/utils/team'
 import { showToast } from 'vant';
 import ClipboardJS from 'clipboard'
 
 const router = useRouter()
-const showJoin = ref(false);
+
+
 const loading = ref(true);
 const list = ref([]);
 const currentPlan = ref(null);
 let applyingCount = ref(0);
+
+const getInviteList = () => {
+    const inviteCode = currentPlan.value.id+':'+currentPlan.value.invitation_code
+    return window.location.origin + '/#/team/list?inviteCode=' + encodeURIComponent(inviteCode)
+}
 const init = async () => {
     const { data: { data } } = await teamList();
     if (data.current_team?.length) {

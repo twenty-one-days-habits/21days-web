@@ -28,7 +28,6 @@ import { defineComponent, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { postLogin } from '@/utils/user'
 
-
 export default defineComponent({
     components: {
         Title,
@@ -38,7 +37,7 @@ export default defineComponent({
         const userName = ref('');
         const password = ref('');
         const router = useRouter()
-
+        const route = useRoute()
         const toRegister = () => {
             router.push({
                 path: '/user/register'
@@ -67,8 +66,10 @@ export default defineComponent({
                     email: data.providerUid
                 }
                 localStorage.setItem('userInfo', JSON.stringify(info))
+                console.log(route.query);
                 router.push({
-                    path: '/team/list'
+                    path: '/team/list',
+                    query: route.query
                 })
             }
         }

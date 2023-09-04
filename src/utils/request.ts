@@ -18,7 +18,8 @@ request.interceptors.response.use(response => {
   return response;
 }, ( data ) => {
   if(+data.response.status === 401) {
-    location.href = '/#/user/login'
+    const a = location.hash.split('?')[1]
+    location.href = `/#/user/login?${a}`
   }
   return data.response;
 });

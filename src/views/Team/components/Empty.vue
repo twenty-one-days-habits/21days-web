@@ -1,8 +1,11 @@
 <script setup lang="ts">
-    import { useRouter } from 'vue-router'
+    import { useRouter,useRoute } from 'vue-router'
     import { ref } from 'vue'
     import Join from './Join.vue'    
     const router = useRouter()
+    const route = useRoute()
+    const inviteCode = route.query.inviteCode;
+   
     const showJoin = ref(false)
     const createTeam = () => {
         router.push({
@@ -11,6 +14,10 @@
     }
     const close = () => {
         showJoin.value = false
+    }
+     if (inviteCode) {
+        console.log(inviteCode, 'kdkd');
+        showJoin.value = true;
     }
 </script>
 <template>

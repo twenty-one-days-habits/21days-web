@@ -159,7 +159,7 @@ const route = useRoute()
 let teamId = route.params.teamId;
 let taskId = ref(route.params.taskId as string)
 
-
+let hasClick = false
 let disableEdit = ref(route.query.disableEdit === 'true')
 
 const daysOfWeek = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
@@ -224,13 +224,19 @@ const onSubmit = async (values: any) => {
     title: values.title,
     description: values.description,
   }
+  if(hasClick) {
+    return
+  }
   if (taskId.value){
     data.id = taskId.value;
     data.score = +values.score;
+    hasClick = true
     const res = await editTask(data);
     showToast(res?.data?.code === 200 ? '修改成功' : '修改失败');
     if(res?.data?.code === 200) {
       location.replace('#/plan/list')
+    } else {
+      hasClick = false
     }
     return;
   }
@@ -285,10 +291,17 @@ const onSubmit = async (values: any) => {
   //   score: +values.score
   // }
   delete data.checkInType
+  if (hasClick) {
+    return;
+  }
+  hasClick = true
   const res = await createTask(data);
   showToast(res?.data?.code === 200 ? '创建成功' : '创建失败');
   if(res?.data?.code === 200) {
     location.replace('#/plan/list')
+    // hasClick = false
+  } else {
+    hasClick = false
   }
 };
 </script>

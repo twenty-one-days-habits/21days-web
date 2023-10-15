@@ -16,7 +16,6 @@
         showJoin.value = false
     }
      if (inviteCode) {
-        console.log(inviteCode, 'kdkd');
         showJoin.value = true;
     }
 </script>
